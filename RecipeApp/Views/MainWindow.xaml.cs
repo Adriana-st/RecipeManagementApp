@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecipeApp.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,10 +37,9 @@ namespace RecipeApp
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Browse Recipes page - Coming soon!\n\nThis will display recipes from the DummyJSON API.",
-                          "Coming Soon",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            // Open the RecipesPage window
+            var recipesPage = new RecipePage();
+            recipesPage.Show();
         }
 
         private void FavouritesButton_Click(object sender, RoutedEventArgs e)
