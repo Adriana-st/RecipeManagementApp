@@ -17,8 +17,8 @@ using System.Windows.Shapes;
 namespace RecipeApp
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// Demonstrates: Event Handling
+    /// Main window with frame navigation
+    /// Demonstrates: Event handling, frame navigation
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -26,20 +26,25 @@ namespace RecipeApp
         {
             InitializeComponent();
         }
-
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// When window loads, navigate to home page
+        /// </summary>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Home page - Currently viewing",
-                          "Navigation",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            // Show home page on startup
+            MainFrame.Navigate(new HomePage());
         }
 
+        // Navigate to Home page
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new HomePage());
+        }
+
+        // Navigate to Browse Recipes page
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            // Open the RecipesPage window
-            var recipesPage = new RecipePage();
-            recipesPage.Show();
+            MainFrame.Navigate(new RecipePage());
         }
 
         private void FavouritesButton_Click(object sender, RoutedEventArgs e)

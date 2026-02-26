@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:RecipeApp"
         mc:Ignorable="d"
         Title="Recipe Management App" Height="600" Width="900"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -92,124 +93,10 @@
                 </StackPanel>
             </Border>
 
-            <!-- Content Area -->
-            <Border Grid.Column="1" Padding="20">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBlock Text="Welcome!" 
-                                  FontSize="24" 
-                                  FontWeight="Bold" 
-                                  Margin="0,0,0,20"/>
-
-                        <TextBlock Text="Get started by browsing recipes or adding your own." 
-                                  FontSize="14" 
-                                  TextWrapping="Wrap"
-                                  Margin="0,0,0,20"/>
-
-                        <!-- Feature Cards -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- Card 1 -->
-                            <Border Grid.Row="0" Grid.Column="0" 
-                                   Background="White" 
-                                   BorderBrush="#CCCCCC" 
-                                   BorderThickness="1" 
-                                   CornerRadius="5" 
-                                   Padding="15" 
-                                   Margin="5">
-                                <StackPanel>
-                                    <TextBlock Text="📖 Browse Recipes" 
-                                              FontSize="18" 
-                                              FontWeight="Bold" 
-                                              Margin="0,0,0,10"/>
-                                    <TextBlock Text="Explore recipes from our API" 
-                                              TextWrapping="Wrap" 
-                                              Margin="0,0,0,10"/>
-                                    <Button Content="Start Browsing" 
-                                           Click="BrowseButton_Click"
-                                           HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Card 2 -->
-                            <Border Grid.Row="0" Grid.Column="1" 
-                                   Background="White" 
-                                   BorderBrush="#CCCCCC" 
-                                   BorderThickness="1" 
-                                   CornerRadius="5" 
-                                   Padding="15" 
-                                   Margin="5">
-                                <StackPanel>
-                                    <TextBlock Text="➕ Add Recipe" 
-                                              FontSize="18" 
-                                              FontWeight="Bold" 
-                                              Margin="0,0,0,10"/>
-                                    <TextBlock Text="Create custom recipes" 
-                                              TextWrapping="Wrap" 
-                                              Margin="0,0,0,10"/>
-                                    <Button Content="Add Recipe" 
-                                           Click="AddRecipeButton_Click"
-                                           HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Card 3 -->
-                            <Border Grid.Row="1" Grid.Column="0" 
-                                   Background="White" 
-                                   BorderBrush="#CCCCCC" 
-                                   BorderThickness="1" 
-                                   CornerRadius="5" 
-                                   Padding="15" 
-                                   Margin="5">
-                                <StackPanel>
-                                    <TextBlock Text="📅 Meal Planner" 
-                                              FontSize="18" 
-                                              FontWeight="Bold" 
-                                              Margin="0,0,0,10"/>
-                                    <TextBlock Text="Plan your weekly meals" 
-                                              TextWrapping="Wrap" 
-                                              Margin="0,0,0,10"/>
-                                    <Button Content="Open Planner" 
-                                           Click="MealPlannerButton_Click"
-                                           HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Card 4 -->
-                            <Border Grid.Row="1" Grid.Column="1" 
-                                   Background="White" 
-                                   BorderBrush="#CCCCCC" 
-                                   BorderThickness="1" 
-                                   CornerRadius="5" 
-                                   Padding="15" 
-                                   Margin="5">
-                                <StackPanel>
-                                    <TextBlock Text="🛒 Shopping List" 
-                                              FontSize="18" 
-                                              FontWeight="Bold" 
-                                              Margin="0,0,0,10"/>
-                                    <TextBlock Text="Generate shopping lists" 
-                                              TextWrapping="Wrap" 
-                                              Margin="0,0,0,10"/>
-                                    <Button Content="View List" 
-                                           Click="ShoppingListButton_Click"
-                                           HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                       
-                    </StackPanel>
-                </ScrollViewer>
-            </Border>
+            <!-- Content Area - Frame for Navigation -->
+            <Frame x:Name="MainFrame" 
+                   Grid.Column="1" 
+                   NavigationUIVisibility="Hidden"/>
         </Grid>
     </Grid>
 </Window>
