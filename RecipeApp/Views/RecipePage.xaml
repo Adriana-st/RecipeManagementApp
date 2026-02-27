@@ -10,23 +10,9 @@
       Loaded="Page_Loaded">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Page Header -->
-        <Border Grid.Row="0" Background="#DE82A9" Padding="15">
-            <TextBlock Text="Browse Recipes from DummyJSON API" 
-                      FontSize="24" 
-                      FontWeight="Bold" 
-                      Foreground="White"
-                      HorizontalAlignment="Center"/>
-        </Border>
 
         <!-- Loading Panel -->
-        <StackPanel Grid.Row="1"
-                   x:Name="LoadingPanel"
+        <StackPanel x:Name="LoadingPanel"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Visibility="Visible">
@@ -41,11 +27,18 @@
         </StackPanel>
 
         <!-- Recipes Display -->
-        <ScrollViewer Grid.Row="1"
-                     x:Name="RecipesPanel"
+        <ScrollViewer x:Name="RecipesPanel"
                      Visibility="Collapsed"
                      VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="20">
+
+                <!-- Page Title -->
+                <TextBlock Text="Browse Recipes" 
+                  FontSize="28" 
+                  FontWeight="Bold" 
+                  Foreground="#A62B60"
+                  Margin="0,0,0,20"/>
+
                 <!-- Recipe Count -->
                 <TextBlock x:Name="RecipeCountText"
                           FontSize="16"
@@ -145,8 +138,7 @@
         </ScrollViewer>
 
         <!-- Error Panel -->
-        <StackPanel Grid.Row="1"
-                   x:Name="ErrorPanel"
+        <StackPanel x:Name="ErrorPanel"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Visibility="Collapsed">
