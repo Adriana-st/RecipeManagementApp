@@ -51,13 +51,13 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="White"
-                                   BorderBrush="#CCCCCC"
-                                   BorderThickness="1"
-                                   CornerRadius="5"
-                                   Padding="15"
-                                   Margin="0,0,0,15"
-                                   MouseEnter="RecipeBorder_MouseEnter"
-                                   MouseLeave="RecipeBorder_MouseLeave">
+                               BorderBrush="#CCCCCC"
+                               BorderThickness="1"
+                               CornerRadius="5"
+                               Padding="15"
+                               Margin="0,0,0,15"
+                               MouseEnter="RecipeBorder_MouseEnter"
+                               MouseLeave="RecipeBorder_MouseLeave">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
@@ -66,34 +66,34 @@
 
                                     <!-- Recipe Image -->
                                     <Border Grid.Column="0"
-                                           Background="#F5F5F5"
-                                           CornerRadius="5"
-                                           Margin="0,0,15,0">
+                                       Background="#F5F5F5"
+                                       CornerRadius="5"
+                                       Margin="0,0,15,0">
                                         <Image Source="{Binding ImageUrl}"
-                                              Width="140"
-                                              Height="140"
-                                              Stretch="UniformToFill"/>
+                                          Width="140"
+                                          Height="140"
+                                          Stretch="UniformToFill"/>
                                     </Border>
 
                                     <!-- Recipe Info -->
                                     <StackPanel Grid.Column="1">
                                         <!-- Name -->
                                         <TextBlock Text="{Binding Name}"
-                                                  FontSize="20"
-                                                  FontWeight="Bold"
-                                                  Foreground="#A62B60"
-                                                  TextWrapping="Wrap"/>
+                                          FontSize="20"
+                                          FontWeight="Bold"
+                                          Foreground="#A62B60"
+                                          TextWrapping="Wrap"/>
 
                                         <!-- Cuisine -->
                                         <Border Background="#97BC62"
-                                               CornerRadius="10"
-                                               Padding="6,2"
-                                               HorizontalAlignment="Left"
-                                               Margin="0,5,0,0">
+                                           CornerRadius="10"
+                                           Padding="6,2"
+                                           HorizontalAlignment="Left"
+                                           Margin="0,5,0,0">
                                             <TextBlock Text="{Binding CuisineType}"
-                                                      FontSize="11"
-                                                      Foreground="White"
-                                                      FontWeight="Bold"/>
+                                              FontSize="11"
+                                              Foreground="White"
+                                              FontWeight="Bold"/>
                                         </Border>
 
                                         <!-- Times and Servings -->
@@ -114,20 +114,57 @@
                                         <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                                             <TextBlock Text="📊 Difficulty: " FontSize="13" FontWeight="Bold"/>
                                             <TextBlock Text="{Binding Difficulty}"
-                                                      FontSize="13"
-                                                      FontWeight="Bold"
-                                                      Foreground="#97BC62"/>
+                                              FontSize="13"
+                                              FontWeight="Bold"
+                                              Foreground="#97BC62"/>
                                         </StackPanel>
 
                                         <!-- Ingredients -->
                                         <TextBlock Text="🥘 Ingredients:"
-                                                  FontWeight="Bold"
-                                                  FontSize="13"
-                                                  Margin="0,10,0,3"/>
+                                          FontWeight="Bold"
+                                          FontSize="13"
+                                          Margin="0,10,0,3"/>
                                         <TextBlock Text="{Binding IngredientsDisplay}"
-                                                  TextWrapping="Wrap"
-                                                  FontSize="12"
-                                                  Foreground="#333333"/>
+                                          TextWrapping="Wrap"
+                                          FontSize="12"
+                                          Foreground="#333333"/>
+
+                                        <!-- Save to Favourites Button -->
+                                        <Button Content="💾 Save to Favourites"
+                                            Click="SaveToFavourites_Click"
+                                            Tag="{Binding}"
+                                            Background="#A62B60"
+                                            Foreground="White"
+                                            BorderThickness="0"
+                                            Padding="12,6"
+                                            Margin="0,10,0,0"
+                                            FontSize="13"
+                                            FontWeight="Bold"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Left">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Background" Value="#A62B60"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}"
+                                                                   CornerRadius="5"
+                                                                   Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter HorizontalAlignment="Center"
+                                                                        VerticalAlignment="Center"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#8A2350"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
                                     </StackPanel>
                                 </Grid>
                             </Border>

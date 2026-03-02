@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecipeApp.Data;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,12 @@ namespace RecipeApp
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            // Database will be created automatically by migrations
+            // No manual initialization needed!
+        }
     }
 }

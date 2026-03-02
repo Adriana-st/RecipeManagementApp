@@ -1,4 +1,5 @@
-﻿using RecipeApp.Services;
+﻿using RecipeApp.Models;
+using RecipeApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,6 +101,60 @@ namespace RecipeApp.Views
             if (sender is Border border)
             {
                 border.Background = new SolidColorBrush(Colors.White);
+            }
+        }
+
+        /// <summary>
+        /// Save recipe to favourites
+        /// </summary>
+        private async void SaveToFavourites_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Get the recipe from the button's Tag
+                var button = sender as Button;
+                var recipe = button?.Tag as Recipe;
+
+                if (recipe == null)
+                {
+                    MessageBox.Show("Error: Could not get recipe data", "Error");
+                    return;
+                }
+
+                // Change button to show it's saving
+                button.Content = "💾 Saving...";
+                button.IsEnabled = false;
+
+                // Save to database
+                var recipeService = new RecipeService();
+                var success = await recipeService.SaveToFavouritesAsync(recipe);
+
+                if (success)
+                {
+                    // Success!
+                    button.Content = "✅ Saved!";
+                    button.Background = new SolidColorBrush(Color.FromRgb(151, 188, 98)); // Green
+
+                    MessageBox.Show($"'{recipe.Name}' saved to favourites!",
+                                  "Saved",
+                                  MessageBoxButton.OK,
+                                  MessageBoxImage.Information);
+                }
+                else
+                {
+                    // Failed
+                    button.Content = "💾 Save to Favourites";
+                    button.IsEnabled = true;
+
+                    MessageBox.Show("Failed to save recipe. Please try again.",
+                                  "Error",
+                                  MessageBoxButton.OK,
+                                  MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error");
             }
         }
     }
