@@ -76,12 +76,19 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Services\RecipeService.cs" />
+    <Compile Include="Views\FavouritesPage.xaml.cs">
+      <DependentUpon>FavouritesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RecipePage.xaml.cs">
       <DependentUpon>RecipePage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\FavouritesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

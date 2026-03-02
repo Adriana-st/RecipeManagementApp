@@ -49,10 +49,7 @@ namespace RecipeApp
 
         private void FavouritesButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("My Favourites page - Coming soon!\n\nThis will show saved recipes from the database.",
-                          "Coming Soon",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            MainFrame.Navigate(new FavouritesPage());
         }
 
         private void AddRecipeButton_Click(object sender, RoutedEventArgs e)
