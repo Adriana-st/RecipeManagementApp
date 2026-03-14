@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace RecipeApp.Views
 {
@@ -23,6 +24,8 @@ namespace RecipeApp.Views
     public partial class RecipePage : Page
     {
         private readonly RecipeApiService _apiService;
+        private List<Recipe> _allRecipes; // Store all recipes
+        private ObservableCollection<Recipe> _displayedRecipes; // Recipes currently shown
 
         public RecipePage()
         {
@@ -44,16 +47,21 @@ namespace RecipeApp.Views
                 RecipesPanel.Visibility = Visibility.Collapsed;
                 ErrorPanel.Visibility = Visibility.Collapsed;
 
-                // Fetch recipes
-                var recipes = await _apiService.GetRecipesAsync();
+                Console.WriteLine("Starting to fetch recipes...");
 
-                // Process ingredients for display
-                foreach (var recipe in recipes)
+                // Fetch recipes from API
+                _allRecipes = await _apiService.GetRecipesAsync();
+
+                Console.WriteLine($"Received {_allRecipes.Count} recipes");
+
+                // Process each recipe for display
+                foreach (var recipe in _allRecipes)
                 {
                     if (recipe.Ingredients != null && recipe.Ingredients.Count > 0)
                     {
-                        var count = Math.Min(5, recipe.Ingredients.Count);
-                        recipe.IngredientsDisplay = string.Join(", ", recipe.Ingredients.Take(count));
+                        var ingredientCount = Math.Min(5, recipe.Ingredients.Count);
+                        recipe.IngredientsDisplay = string.Join(", ",
+                            recipe.Ingredients.Take(ingredientCount));
 
                         if (recipe.Ingredients.Count > 5)
                         {
@@ -66,21 +74,30 @@ namespace RecipeApp.Views
                     }
                 }
 
-                // Display recipes
-                RecipeList.ItemsSource = recipes;
-                RecipeCountText.Text = $"Found {recipes.Count} delicious recipes!";
+                // Initialize observable collection
+                _displayedRecipes = new ObservableCollection<Recipe>(_allRecipes);
 
-                // Show results
+                // Bind recipes to UI
+                RecipeList.ItemsSource = _displayedRecipes;
+                RecipeCountText.Text = $"Found {_allRecipes.Count} delicious recipes!";
+
+                // Hide loading, show results
                 LoadingPanel.Visibility = Visibility.Collapsed;
                 RecipesPanel.Visibility = Visibility.Visible;
+
+                Console.WriteLine("Recipes displayed successfully!");
             }
             catch (Exception ex)
             {
-                // Show error
+                Console.WriteLine($"Error in LoadRecipes: {ex.Message}");
+
+                // Show error panel
                 LoadingPanel.Visibility = Visibility.Collapsed;
                 ErrorPanel.Visibility = Visibility.Visible;
-                ErrorText.Text = ex.Message;
+
+                ErrorMessage.Text = ex.Message;
             }
+        
         }
 
         private async void TryAgain_Click(object sender, RoutedEventArgs e)
@@ -157,5 +174,112 @@ namespace RecipeApp.Views
                 MessageBox.Show($"Error: {ex.Message}", "Error");
             }
         }
+
+        /// <summary>
+        /// Apply all filters - Demonstrates complex LINQ queries
+        /// </summary>
+        private void ApplyFilters_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
+        private void ApplyFilters()
+        {
+            if (_allRecipes == null || _displayedRecipes == null)
+                return;
+
+            try
+            {
+                // Start with all recipes
+                var filtered = _allRecipes.AsEnumerable();
+
+                // 1. Search filter (name or ingredients)
+                var searchTerm = SearchBox.Text?.Trim().ToLower();
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    filtered = filtered.Where(r =>
+                        r.Name.ToLower().Contains(searchTerm) ||
+                        (r.Ingredients != null && r.Ingredients.Any(i => i.ToLower().Contains(searchTerm))));
+                }
+
+                // 2. Cuisine filter
+                var cuisineItem = CuisineFilter.SelectedItem as ComboBoxItem;
+                var cuisine = cuisineItem?.Content.ToString();
+                if (cuisine != "All Cuisines" && !string.IsNullOrEmpty(cuisine))
+                {
+                    filtered = filtered.Where(r =>
+                        r.CuisineType != null &&
+                        r.CuisineType.Equals(cuisine, StringComparison.OrdinalIgnoreCase));
+                }
+
+                // 3. Difficulty filter
+                var difficultyItem = DifficultyFilter.SelectedItem as ComboBoxItem;
+                var difficulty = difficultyItem?.Content.ToString();
+                if (difficulty != "All Levels" && !string.IsNullOrEmpty(difficulty))
+                {
+                    filtered = filtered.Where(r =>
+                        r.Difficulty != null &&
+                        r.Difficulty.Equals(difficulty, StringComparison.OrdinalIgnoreCase));
+                }
+
+                // 4. Time filter
+                var maxTime = (int)TimeSlider.Value;
+                filtered = filtered.Where(r => r.TotalTimeMinutes <= maxTime);
+
+                // 5. Ingredient filter
+                var ingredientItem = IngredientFilter.SelectedItem as ComboBoxItem;
+                var ingredient = ingredientItem?.Content.ToString();
+                if (ingredient != "Any Ingredient" && !string.IsNullOrEmpty(ingredient))
+                {
+                    filtered = filtered.Where(r =>
+                        r.Ingredients != null &&
+                        r.Ingredients.Any(i => i.ToLower().Contains(ingredient.ToLower())));
+                }
+
+                // Convert to list
+                var resultList = filtered.ToList();
+
+                // Update observable collection
+                _displayedRecipes.Clear();
+                foreach (var recipe in resultList)
+                {
+                    _displayedRecipes.Add(recipe);
+                }
+
+                // Update count
+                RecipeCountText.Text = resultList.Count == 0
+                    ? "No recipes match your filters"
+                    : $"Found {resultList.Count} recipe{(resultList.Count == 1 ? "" : "s")}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Filter error: {ex.Message}", "Error");
+            }
+        }
+
+        /// <summary>
+        /// Clear all filters and show all recipes
+        /// </summary>
+        private void ClearFilters_Click(object sender, RoutedEventArgs e)
+        {
+            // Reset all filters
+            SearchBox.Text = "";
+            CuisineFilter.SelectedIndex = 0;
+            DifficultyFilter.SelectedIndex = 0;
+            TimeSlider.Value = 120;
+            IngredientFilter.SelectedIndex = 0;
+
+            // Show all recipes
+            ApplyFilters();
+        }
+
+        /// <summary>
+        /// View recipe details - navigate to detail page
+        /// </summary>
+        private void ViewDetails_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }

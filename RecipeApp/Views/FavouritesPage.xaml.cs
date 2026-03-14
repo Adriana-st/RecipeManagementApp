@@ -1,6 +1,8 @@
-﻿using RecipeApp.Services;
+﻿using RecipeApp.Models;
+using RecipeApp.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +24,23 @@ namespace RecipeApp.Views
     public partial class FavouritesPage : Page
     {
         private readonly RecipeService _recipeService;
+
+        // Observable Collection - automatically updates UI when changed
+        private ObservableCollection<Recipe> _favourites;
+        public ObservableCollection<Recipe> Favourites
+        {
+            get => _favourites;
+            set
+            {
+                _favourites = value;
+                FavouritesList.ItemsSource = _favourites;
+            }
+        }
         public FavouritesPage()
         {
             InitializeComponent();
             _recipeService = new RecipeService();
+            Favourites = new ObservableCollection<Recipe>();
         }
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -44,11 +59,15 @@ namespace RecipeApp.Views
                 // Load from database
                 var favourites = await _recipeService.GetFavouritesAsync();
 
+                // Clear and repopulate observable collection
+                Favourites.Clear();
+
                 if (favourites == null || favourites.Count == 0)
                 {
                     // No favourites - show empty state
                     LoadingPanel.Visibility = Visibility.Collapsed;
                     EmptyPanel.Visibility = Visibility.Visible;
+                    CountText.Text = "No favourites saved yet";
                 }
                 else
                 {
@@ -69,11 +88,12 @@ namespace RecipeApp.Views
                         {
                             recipe.IngredientsDisplay = "No ingredients listed";
                         }
+                        // Add to observable collection (UI updates automatically)
+                        Favourites.Add(recipe);
                     }
 
-                    // Display favourites
-                    FavouritesList.ItemsSource = favourites;
-                    CountText.Text = $"You have {favourites.Count} favourite recipe{(favourites.Count == 1 ? "" : "s")}";
+                    // Update count
+                    UpdateCount();
 
                     // Show results
                     LoadingPanel.Visibility = Visibility.Collapsed;
@@ -93,7 +113,7 @@ namespace RecipeApp.Views
             try
             {
                 var button = sender as Button;
-                var recipe = button?.Tag as Models.Recipe;
+                var recipe = button?.Tag as Recipe;
 
                 if (recipe == null)
                 {
@@ -115,10 +135,20 @@ namespace RecipeApp.Views
 
                     if (success)
                     {
-                        MessageBox.Show($"'{recipe.Name}' removed from favourites!", "Removed");
+                        // Remove from observable collection (UI updates automatically!)
+                        Favourites.Remove(recipe);
 
-                        // Reload the list
-                        await LoadFavourites();
+                        // Update count
+                        UpdateCount();
+
+                        // Show empty state if no recipes left
+                        if (Favourites.Count == 0)
+                        {
+                            FavouritesPanel.Visibility = Visibility.Collapsed;
+                            EmptyPanel.Visibility = Visibility.Visible;
+                        }
+
+                        MessageBox.Show($"'{recipe.Name}' removed from favourites!", "Removed");
                     }
                     else
                     {
@@ -130,6 +160,13 @@ namespace RecipeApp.Views
             {
                 MessageBox.Show($"Error: {ex.Message}", "Error");
             }
+        }
+
+        private void UpdateCount()
+        {
+            CountText.Text = Favourites.Count == 0
+                ? "No favourites saved yet"
+                : $"You have {Favourites.Count} favourite recipe{(Favourites.Count == 1 ? "" : "s")}";
         }
 
         private void BrowseRecipes_Click(object sender, RoutedEventArgs e)

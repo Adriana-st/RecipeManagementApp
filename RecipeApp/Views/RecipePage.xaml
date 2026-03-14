@@ -10,195 +10,331 @@
       Loaded="Page_Loaded">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Loading Panel -->
-        <StackPanel x:Name="LoadingPanel"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Visibility="Visible">
-            <TextBlock Text="🔄 Loading recipes..." 
-                      FontSize="20"
-                      HorizontalAlignment="Center"
-                      Margin="0,0,0,10"/>
-            <TextBlock Text="Please wait while we fetch recipes from the API" 
-                      FontSize="14"
-                      Foreground="#666666"
-                      HorizontalAlignment="Center"/>
-        </StackPanel>
-
-        <!-- Recipes Display -->
-        <ScrollViewer x:Name="RecipesPanel"
-                     Visibility="Collapsed"
-                     VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="20">
-
+        <!-- Filter Panel -->
+        <Border Grid.Row="0" Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="20">
+            <StackPanel>
                 <!-- Page Title -->
                 <TextBlock Text="Browse Recipes" 
-                  FontSize="28" 
-                  FontWeight="Bold" 
-                  Foreground="#A62B60"
-                  Margin="0,0,0,20"/>
+                          FontSize="28" 
+                          FontWeight="Bold" 
+                          Foreground="#A62B60"
+                          Margin="0,0,0,20"/>
 
-                <!-- Recipe Count -->
-                <TextBlock x:Name="RecipeCountText"
-                          FontSize="16"
+                <!-- Search Box -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="🔍 Search" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="SearchBox"
+                                Grid.Column="0"
+                                Padding="10"
+                                FontSize="14"
+                                VerticalContentAlignment="Center"
+                                BorderBrush="#CCCCCC"
+                                BorderThickness="1"/>
+
+                        <Button Grid.Column="1"
+                               Content="Search"
+                               Click="ApplyFilters_Click"
+                               Background="#A62B60"
+                               Foreground="White"
+                               BorderThickness="0"
+                               Padding="20,10"
+                               Margin="5,0,0,0"
+                               FontSize="14"
+                               Cursor="Hand"/>
+                    </Grid>
+                    <TextBlock Text="Search by recipe name or ingredients" 
+                              FontSize="11" 
+                              Foreground="#666666" 
+                              Margin="0,3,0,0"/>
+                </StackPanel>
+
+                <!-- Filters Row -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Cuisine Filter -->
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="🍴 Cuisine Type" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="CuisineFilter"
+                                 SelectionChanged="ApplyFilters_Click"
+                                 Padding="10"
+                                 FontSize="14"
+                                 BorderBrush="#CCCCCC">
+                            <ComboBoxItem Content="All Cuisines" IsSelected="True"/>
+                            <ComboBoxItem Content="Italian"/>
+                            <ComboBoxItem Content="Asian"/>
+                            <ComboBoxItem Content="American"/>
+                            <ComboBoxItem Content="Mexican"/>
+                            <ComboBoxItem Content="Indian"/>
+                            <ComboBoxItem Content="Mediterranean"/>
+                            <ComboBoxItem Content="Japanese"/>
+                            <ComboBoxItem Content="Thai"/>
+                            <ComboBoxItem Content="Greek"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Difficulty Filter -->
+                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                        <TextBlock Text="📊 Difficulty" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="DifficultyFilter"
+                                 SelectionChanged="ApplyFilters_Click"
+                                 Padding="10"
+                                 FontSize="14"
+                                 BorderBrush="#CCCCCC">
+                            <ComboBoxItem Content="All Levels" IsSelected="True"/>
+                            <ComboBoxItem Content="Easy"/>
+                            <ComboBoxItem Content="Medium"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Time Filter -->
+                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                        <TextBlock Text="⏱️ Max Cooking Time" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                        <StackPanel>
+                            <Slider x:Name="TimeSlider"
+                                   Minimum="10"
+                                   Maximum="120"
+                                   Value="120"
+                                   TickFrequency="10"
+                                   IsSnapToTickEnabled="True"
+                                   ValueChanged="ApplyFilters_Click"
+                                   Margin="0,5"/>
+                            <TextBlock Text="{Binding ElementName=TimeSlider, Path=Value, StringFormat='Up to {0} minutes'}"
+                                      FontSize="12"
+                                      Foreground="#666666"
+                                      HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Protein/Ingredient Filter -->
+                    <StackPanel Grid.Column="3">
+                        <TextBlock Text="🥩 Contains Ingredient" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="IngredientFilter"
+                                 SelectionChanged="ApplyFilters_Click"
+                                 Padding="10"
+                                 FontSize="14"
+                                 BorderBrush="#CCCCCC">
+                            <ComboBoxItem Content="Any Ingredient" IsSelected="True"/>
+                            <ComboBoxItem Content="Chicken"/>
+                            <ComboBoxItem Content="Beef"/>
+                            <ComboBoxItem Content="Pork"/>
+                            <ComboBoxItem Content="Fish"/>
+                            <ComboBoxItem Content="Pasta"/>
+                            <ComboBoxItem Content="Rice"/>
+                            <ComboBoxItem Content="Cheese"/>
+                            <ComboBoxItem Content="Eggs"/>
+                            <ComboBoxItem Content="Tomato"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Clear Filters Button -->
+                <Button Content="🔄 Clear All Filters"
+                       Click="ClearFilters_Click"
+                       Background="#97BC62"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Padding="15,8"
+                       Margin="0,15,0,0"
+                       FontSize="13"
+                       Cursor="Hand"
+                       HorizontalAlignment="Left"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+            <!-- Loading Panel -->
+            <StackPanel x:Name="LoadingPanel"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Visibility="Visible">
+                <TextBlock Text="🔄 Loading recipes..." 
+                          FontSize="20"
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,10"/>
+                <TextBlock Text="Please wait while we fetch recipes from the API" 
+                          FontSize="14"
                           Foreground="#666666"
-                          Margin="0,0,0,15"
                           HorizontalAlignment="Center"/>
+            </StackPanel>
 
-                <!-- Recipe List -->
-                <ItemsControl x:Name="RecipeList">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="White"
-                               BorderBrush="#CCCCCC"
-                               BorderThickness="1"
-                               CornerRadius="5"
-                               Padding="15"
-                               Margin="0,0,0,15"
-                               MouseEnter="RecipeBorder_MouseEnter"
-                               MouseLeave="RecipeBorder_MouseLeave">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+            <!-- Recipes Display -->
+            <ScrollViewer x:Name="RecipesPanel"
+                         Visibility="Collapsed"
+                         VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="20">
+                    <!-- Recipe Count -->
+                    <TextBlock x:Name="RecipeCountText"
+                              FontSize="16"
+                              Foreground="#666666"
+                              Margin="0,0,0,15"
+                              HorizontalAlignment="Center"/>
 
-                                    <!-- Recipe Image -->
-                                    <Border Grid.Column="0"
-                                       Background="#F5F5F5"
+                    <!-- Recipe List -->
+                    <ItemsControl x:Name="RecipeList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                       BorderBrush="#CCCCCC"
+                                       BorderThickness="1"
                                        CornerRadius="5"
-                                       Margin="0,0,15,0">
-                                        <Image Source="{Binding ImageUrl}"
-                                          Width="140"
-                                          Height="140"
-                                          Stretch="UniformToFill"/>
-                                    </Border>
+                                       Padding="15"
+                                       Margin="0,0,0,15"
+                                       MouseEnter="RecipeBorder_MouseEnter"
+                                       MouseLeave="RecipeBorder_MouseLeave"
+                                       Cursor="Hand">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <!-- Recipe Info -->
-                                    <StackPanel Grid.Column="1">
-                                        <!-- Name -->
-                                        <TextBlock Text="{Binding Name}"
-                                          FontSize="20"
-                                          FontWeight="Bold"
-                                          Foreground="#A62B60"
-                                          TextWrapping="Wrap"/>
-
-                                        <!-- Cuisine -->
-                                        <Border Background="#97BC62"
-                                           CornerRadius="10"
-                                           Padding="6,2"
-                                           HorizontalAlignment="Left"
-                                           Margin="0,5,0,0">
-                                            <TextBlock Text="{Binding CuisineType}"
-                                              FontSize="11"
-                                              Foreground="White"
-                                              FontWeight="Bold"/>
+                                        <!-- Recipe Image -->
+                                        <Border Grid.Column="0"
+                                               Background="#F5F5F5"
+                                               CornerRadius="5"
+                                               Margin="0,0,15,0">
+                                            <Image Source="{Binding ImageUrl}"
+                                                  Width="140"
+                                                  Height="140"
+                                                  Stretch="UniformToFill"/>
                                         </Border>
 
-                                        <!-- Times and Servings -->
-                                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                            <TextBlock Text="⏱️ Prep: " FontSize="13" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding PrepTimeMinutes}" FontSize="13"/>
-                                            <TextBlock Text=" min  |  " FontSize="13"/>
+                                        <!-- Recipe Info -->
+                                        <StackPanel Grid.Column="1">
+                                            <!-- Name -->
+                                            <TextBlock Text="{Binding Name}"
+                                                      FontSize="20"
+                                                      FontWeight="Bold"
+                                                      Foreground="#A62B60"
+                                                      TextWrapping="Wrap"/>
 
-                                            <TextBlock Text="🍳 Cook: " FontSize="13" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding CookTimeMinutes}" FontSize="13"/>
-                                            <TextBlock Text=" min  |  " FontSize="13"/>
+                                            <!-- Cuisine -->
+                                            <Border Background="#97BC62"
+                                                   CornerRadius="10"
+                                                   Padding="6,2"
+                                                   HorizontalAlignment="Left"
+                                                   Margin="0,5,0,0">
+                                                <TextBlock Text="{Binding CuisineType}"
+                                                          FontSize="11"
+                                                          Foreground="White"
+                                                          FontWeight="Bold"/>
+                                            </Border>
 
-                                            <TextBlock Text="👥 Serves: " FontSize="13" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding Servings}" FontSize="13"/>
+                                            <!-- Times and Servings -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                                <TextBlock Text="⏱️ Prep: " FontSize="13" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding PrepTimeMinutes}" FontSize="13"/>
+                                                <TextBlock Text=" min  |  " FontSize="13"/>
+
+                                                <TextBlock Text="🍳 Cook: " FontSize="13" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding CookTimeMinutes}" FontSize="13"/>
+                                                <TextBlock Text=" min  |  " FontSize="13"/>
+
+                                                <TextBlock Text="👥 Serves: " FontSize="13" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Servings}" FontSize="13"/>
+                                            </StackPanel>
+
+                                            <!-- Difficulty -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                                <TextBlock Text="📊 Difficulty: " FontSize="13" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding Difficulty}"
+                                                          FontSize="13"
+                                                          FontWeight="Bold"
+                                                          Foreground="#97BC62"/>
+                                            </StackPanel>
+
+                                            <!-- Ingredients -->
+                                            <TextBlock Text="🥘 Ingredients:"
+                                                      FontWeight="Bold"
+                                                      FontSize="13"
+                                                      Margin="0,10,0,3"/>
+                                            <TextBlock Text="{Binding IngredientsDisplay}"
+                                                      TextWrapping="Wrap"
+                                                      FontSize="12"
+                                                      Foreground="#333333"/>
+
+                                            <!-- Buttons -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                                <!-- Save to Favourites Button -->
+                                                <Button Content="💾 Save"
+                                                       Click="SaveToFavourites_Click"
+                                                       Tag="{Binding}"
+                                                       Background="#A62B60"
+                                                       Foreground="White"
+                                                       BorderThickness="0"
+                                                       Padding="12,6"
+                                                       Margin="0,0,10,0"
+                                                       FontSize="13"
+                                                       FontWeight="Bold"
+                                                       Cursor="Hand"
+                                                       HorizontalAlignment="Left"/>
+
+                                                <!-- View Details Button -->
+                                                <Button Content="📖 View Details"
+                                                       Click="ViewDetails_Click"
+                                                       Tag="{Binding}"
+                                                       Background="#97BC62"
+                                                       Foreground="White"
+                                                       BorderThickness="0"
+                                                       Padding="12,6"
+                                                       FontSize="13"
+                                                       FontWeight="Bold"
+                                                       Cursor="Hand"
+                                                       HorizontalAlignment="Left"/>
+                                            </StackPanel>
                                         </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
 
-                                        <!-- Difficulty -->
-                                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                            <TextBlock Text="📊 Difficulty: " FontSize="13" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding Difficulty}"
-                                              FontSize="13"
-                                              FontWeight="Bold"
-                                              Foreground="#97BC62"/>
-                                        </StackPanel>
-
-                                        <!-- Ingredients -->
-                                        <TextBlock Text="🥘 Ingredients:"
-                                          FontWeight="Bold"
-                                          FontSize="13"
-                                          Margin="0,10,0,3"/>
-                                        <TextBlock Text="{Binding IngredientsDisplay}"
-                                          TextWrapping="Wrap"
-                                          FontSize="12"
-                                          Foreground="#333333"/>
-
-                                        <!-- Save to Favourites Button -->
-                                        <Button Content="💾 Save to Favourites"
-                                            Click="SaveToFavourites_Click"
-                                            Tag="{Binding}"
-                                            Background="#A62B60"
-                                            Foreground="White"
-                                            BorderThickness="0"
-                                            Padding="12,6"
-                                            Margin="0,10,0,0"
-                                            FontSize="13"
-                                            FontWeight="Bold"
-                                            Cursor="Hand"
-                                            HorizontalAlignment="Left">
-                                            <Button.Style>
-                                                <Style TargetType="Button">
-                                                    <Setter Property="Background" Value="#A62B60"/>
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="Button">
-                                                                <Border Background="{TemplateBinding Background}"
-                                                                   CornerRadius="5"
-                                                                   Padding="{TemplateBinding Padding}">
-                                                                    <ContentPresenter HorizontalAlignment="Center"
-                                                                        VerticalAlignment="Center"/>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#8A2350"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Button.Style>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+            <!-- Error Panel -->
+            <StackPanel x:Name="ErrorPanel"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Visibility="Collapsed">
+                <TextBlock Text="❌ Error Loading Recipes"
+                          FontSize="20"
+                          FontWeight="Bold"
+                          Foreground="Red"
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,10"/>
+                <TextBlock x:Name="ErrorMessage"
+                          FontSize="14"
+                          Foreground="#666666"
+                          TextWrapping="Wrap"
+                          TextAlignment="Center"
+                          MaxWidth="400"
+                          Margin="0,0,0,15"/>
+                <Button Content="Try Again"
+                       Click="TryAgain_Click"
+                       Padding="15,8"
+                       Background="#A62B60"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Cursor="Hand"/>
             </StackPanel>
-        </ScrollViewer>
-
-        <!-- Error Panel -->
-        <StackPanel x:Name="ErrorPanel"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Visibility="Collapsed">
-            <TextBlock Text="❌ Error Loading Recipes"
-                      FontSize="20"
-                      FontWeight="Bold"
-                      Foreground="Red"
-                      HorizontalAlignment="Center"
-                      Margin="0,0,0,10"/>
-            <TextBlock x:Name="ErrorText"
-                      FontSize="14"
-                      Foreground="#666666"
-                      TextWrapping="Wrap"
-                      TextAlignment="Center"
-                      MaxWidth="400"
-                      Margin="0,0,0,15"/>
-            <Button Content="Try Again"
-                   Click="TryAgain_Click"
-                   Padding="15,8"
-                   Background="#A62B60"
-                   Foreground="White"
-                   BorderThickness="0"
-                   Cursor="Hand"/>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Page>
