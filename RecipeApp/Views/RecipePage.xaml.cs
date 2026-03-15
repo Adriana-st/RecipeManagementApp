@@ -278,7 +278,21 @@ namespace RecipeApp.Views
         /// </summary>
         private void ViewDetails_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                var button = sender as Button;
+                var recipe = button?.Tag as Recipe;
 
+                if (recipe != null)
+                {
+                    // Navigate to detail page (we'll create this next)
+                    NavigationService?.Navigate(new RecipeDetailPage(recipe));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error");
+            }
         }
 
     }

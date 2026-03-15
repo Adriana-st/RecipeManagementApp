@@ -9,6 +9,236 @@
       Title="RecipeDetailPage">
 
     <Grid>
+        <!-- Content -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="40,20">
+                <!-- Back Button and Title -->
+                <StackPanel Margin="0,0,0,20">
+                    <Button Content="← Back to Recipes"
+                           Click="BackButton_Click"
+                           Background="Transparent"
+                           Foreground="#A62B60"
+                           BorderThickness="0"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Cursor="Hand"
+                           HorizontalAlignment="Left"
+                           Margin="0,0,0,10">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.7"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <TextBlock x:Name="RecipeNameText"
+                              Text="Recipe Name"
+                              FontSize="32"
+                              FontWeight="Bold"
+                              Foreground="#A62B60"
+                              TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="350"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left Column - Image and Quick Info -->
+                    <StackPanel Grid.Column="0" Margin="0,0,30,0">
+                        <!-- Recipe Image -->
+                        <Border Background="#F5F5F5"
+                               CornerRadius="10"
+                               Margin="0,0,0,20">
+                            <Image x:Name="RecipeImage"
+                                  Width="320"
+                                  Height="320"
+                                  Stretch="UniformToFill"/>
+                        </Border>
+
+                        <!-- Quick Info Card -->
+                        <Border Background="White"
+                               BorderBrush="#CCCCCC"
+                               BorderThickness="1"
+                               CornerRadius="10"
+                               Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="Quick Info" 
+                                          FontSize="18" 
+                                          FontWeight="Bold" 
+                                          Foreground="#A62B60"
+                                          Margin="0,0,0,15"/>
+
+                                <!-- Cuisine -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="🍴 Cuisine: " FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock x:Name="CuisineText" Text="Italian" FontSize="14"/>
+                                </StackPanel>
+
+                                <!-- Difficulty -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="📊 Difficulty: " FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock x:Name="DifficultyText" Text="Easy" FontSize="14" Foreground="#97BC62"/>
+                                </StackPanel>
+
+                                <!-- Prep Time -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="⏱️ Prep Time: " FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock x:Name="PrepTimeText" Text="15 min" FontSize="14"/>
+                                </StackPanel>
+
+                                <!-- Cook Time -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="🍳 Cook Time: " FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock x:Name="CookTimeText" Text="30 min" FontSize="14"/>
+                                </StackPanel>
+
+                                <!-- Total Time -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="🕐 Total Time: " FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock x:Name="TotalTimeText" Text="45 min" FontSize="14" Foreground="#A62B60"/>
+                                </StackPanel>
+
+                                <!-- Servings -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBlock Text="👥 Servings: " FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock x:Name="ServingsText" Text="4" FontSize="14"/>
+                                </StackPanel>
+
+                                <!-- Save Button -->
+                                <Button x:Name="SaveButton"
+                                       Content="💾 Save to Favourites"
+                                       Click="SaveToFavourites_Click"
+                                       Background="#A62B60"
+                                       Foreground="White"
+                                       BorderThickness="0"
+                                       Padding="15,10"
+                                       Margin="0,20,0,0"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       Cursor="Hand">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                               CornerRadius="5"
+                                                               Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                            VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#8A2350"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Right Column - Ingredients and Instructions -->
+                    <StackPanel Grid.Column="1">
+                        <!-- Ingredients Section -->
+                        <Border Background="White"
+                               BorderBrush="#CCCCCC"
+                               BorderThickness="1"
+                               CornerRadius="10"
+                               Padding="25"
+                               Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="🥘 Ingredients" 
+                                          FontSize="24" 
+                                          FontWeight="Bold" 
+                                          Foreground="#A62B60"
+                                          Margin="0,0,0,15"/>
+
+                                <ItemsControl x:Name="IngredientsList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="✓" 
+                                                          Foreground="#97BC62" 
+                                                          FontWeight="Bold" 
+                                                          FontSize="16"
+                                                          Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding}" 
+                                                          FontSize="15"
+                                                          TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Instructions Section -->
+                        <Border Background="White"
+                               BorderBrush="#CCCCCC"
+                               BorderThickness="1"
+                               CornerRadius="10"
+                               Padding="25">
+                            <StackPanel>
+                                <TextBlock Text="📖 Instructions" 
+                                          FontSize="24" 
+                                          FontWeight="Bold" 
+                                          Foreground="#A62B60"
+                                          Margin="0,0,0,15"/>
+
+                                <ItemsControl x:Name="InstructionsList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F5F5F5"
+                                                   CornerRadius="5"
+                                                   Padding="15"
+                                                   Margin="0,0,0,12">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Background="#A62B60"
+                                                           CornerRadius="20"
+                                                           Width="30"
+                                                           Height="30"
+                                                           Margin="0,0,15,0">
+                                                        <TextBlock Text="{Binding StepNumber}" 
+                                                                  Foreground="White"
+                                                                  FontWeight="Bold"
+                                                                  FontSize="14"
+                                                                  HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Instruction}" 
+                                                              FontSize="15"
+                                                              TextWrapping="Wrap"
+                                                              VerticalAlignment="Center"
+                                                              MaxWidth="550"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
         
     </Grid>
 </Page>
