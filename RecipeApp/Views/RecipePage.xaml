@@ -15,68 +15,52 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Filter Panel -->
-        <Border Grid.Row="0" Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="20">
+        <!-- Filter Panel - Compact -->
+        <Border Grid.Row="0" Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="15">
             <StackPanel>
                 <!-- Page Title -->
                 <TextBlock Text="Browse Recipes" 
                           FontSize="28" 
                           FontWeight="Bold" 
                           Foreground="#A62B60"
-                          Margin="0,0,0,20"/>
+                          Margin="0,0,0,15"/>
 
-                <!-- Search Box -->
-                <StackPanel Margin="0,0,0,15">
-                    <TextBlock Text="🔍 Search" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                <!-- Single Row Filters -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
+                    <!-- Search Box -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Search" FontWeight="Bold" FontSize="12" Margin="0,0,0,3"/>
                         <TextBox x:Name="SearchBox"
-                                Grid.Column="0"
-                                Padding="10"
-                                FontSize="14"
+                                Padding="8"
+                                FontSize="13"
                                 VerticalContentAlignment="Center"
                                 BorderBrush="#CCCCCC"
                                 BorderThickness="1"/>
-
-                        <Button Grid.Column="1"
-                               Content="Search"
-                               Click="ApplyFilters_Click"
-                               Background="#A62B60"
-                               Foreground="White"
-                               BorderThickness="0"
-                               Padding="20,10"
-                               Margin="5,0,0,0"
-                               FontSize="14"
-                               Cursor="Hand"/>
-                    </Grid>
-                    <TextBlock Text="Search by recipe name or ingredients" 
-                              FontSize="11" 
-                              Foreground="#666666" 
-                              Margin="0,3,0,0"/>
-                </StackPanel>
-
-                <!-- Filters Row -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    </StackPanel>
 
                     <!-- Cuisine Filter -->
-                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                        <TextBlock Text="🍴 Cuisine Type" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Cuisine" FontWeight="Bold" FontSize="12" Margin="0,0,0,3"/>
                         <ComboBox x:Name="CuisineFilter"
                                  SelectionChanged="ApplyFilters_Click"
-                                 Padding="10"
-                                 FontSize="14"
+                                 Padding="8"
+                                 FontSize="13"
                                  BorderBrush="#CCCCCC">
-                            <ComboBoxItem Content="All Cuisines" IsSelected="True"/>
+                            <ComboBoxItem Content="All"/>
                             <ComboBoxItem Content="Italian"/>
                             <ComboBoxItem Content="Asian"/>
                             <ComboBoxItem Content="American"/>
@@ -90,47 +74,57 @@
                     </StackPanel>
 
                     <!-- Difficulty Filter -->
-                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                        <TextBlock Text="📊 Difficulty" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="Difficulty" FontWeight="Bold" FontSize="12" Margin="0,0,0,3"/>
                         <ComboBox x:Name="DifficultyFilter"
                                  SelectionChanged="ApplyFilters_Click"
-                                 Padding="10"
-                                 FontSize="14"
+                                 Padding="8"
+                                 FontSize="13"
                                  BorderBrush="#CCCCCC">
-                            <ComboBoxItem Content="All Levels" IsSelected="True"/>
+                            <ComboBoxItem Content="All"/>
                             <ComboBoxItem Content="Easy"/>
                             <ComboBoxItem Content="Medium"/>
                         </ComboBox>
                     </StackPanel>
 
                     <!-- Time Filter -->
-                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
-                        <TextBlock Text="⏱️ Max Cooking Time" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
-                        <StackPanel>
+                    <StackPanel Grid.Column="6">
+                        <TextBlock Text="Max Time (min)" FontWeight="Bold" FontSize="12" Margin="0,0,0,3"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
                             <Slider x:Name="TimeSlider"
+                                   Grid.Column="0"
                                    Minimum="10"
                                    Maximum="120"
                                    Value="120"
                                    TickFrequency="10"
                                    IsSnapToTickEnabled="True"
                                    ValueChanged="ApplyFilters_Click"
-                                   Margin="0,5"/>
-                            <TextBlock Text="{Binding ElementName=TimeSlider, Path=Value, StringFormat='Up to {0} minutes'}"
-                                      FontSize="12"
-                                      Foreground="#666666"
-                                      HorizontalAlignment="Center"/>
-                        </StackPanel>
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,5,0"/>
+                            <TextBlock Grid.Column="1"
+                                      Text="{Binding ElementName=TimeSlider, Path=Value, StringFormat='{}{0}'}"
+                                      FontSize="13"
+                                      FontWeight="Bold"
+                                      Foreground="#A62B60"
+                                      VerticalAlignment="Center"
+                                      MinWidth="30"
+                                      TextAlignment="Right"/>
+                        </Grid>
                     </StackPanel>
 
-                    <!-- Protein/Ingredient Filter -->
-                    <StackPanel Grid.Column="3">
-                        <TextBlock Text="🥩 Contains Ingredient" FontWeight="Bold" FontSize="14" Margin="0,0,0,5"/>
+                    <!-- Ingredient Filter -->
+                    <StackPanel Grid.Column="8">
+                        <TextBlock Text="Ingredient" FontWeight="Bold" FontSize="12" Margin="0,0,0,3"/>
                         <ComboBox x:Name="IngredientFilter"
                                  SelectionChanged="ApplyFilters_Click"
-                                 Padding="10"
-                                 FontSize="14"
+                                 Padding="8"
+                                 FontSize="13"
                                  BorderBrush="#CCCCCC">
-                            <ComboBoxItem Content="Any Ingredient" IsSelected="True"/>
+                            <ComboBoxItem Content="Any"/>
                             <ComboBoxItem Content="Chicken"/>
                             <ComboBoxItem Content="Beef"/>
                             <ComboBoxItem Content="Pork"/>
@@ -142,22 +136,24 @@
                             <ComboBoxItem Content="Tomato"/>
                         </ComboBox>
                     </StackPanel>
-                </Grid>
 
-                <!-- Clear Filters Button -->
-                <Button Content="🔄 Clear All Filters"
-                       Click="ClearFilters_Click"
-                       Background="#97BC62"
-                       Foreground="White"
-                       BorderThickness="0"
-                       Padding="15,8"
-                       Margin="0,15,0,0"
-                       FontSize="13"
-                       Cursor="Hand"
-                       HorizontalAlignment="Left"/>
+                    <!-- Clear Button -->
+                    <Button Grid.Column="10"
+                           Content="Clear"
+                           Click="ClearFilters_Click"
+                           Background="#97BC62"
+                           Foreground="White"
+                           BorderThickness="0"
+                           Padding="15,0"
+                           FontSize="13"
+                           FontWeight="Bold"
+                           Cursor="Hand"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,0,1"/>
+                </Grid>
             </StackPanel>
         </Border>
-
+        
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
             <!-- Loading Panel -->

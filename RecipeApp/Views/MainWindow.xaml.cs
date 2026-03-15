@@ -54,10 +54,7 @@ namespace RecipeApp
 
         private void AddRecipeButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Add Recipe page - Coming soon!\n\nThis will allow you to create custom recipes.",
-                          "Coming Soon",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            MainFrame.Navigate(new AddRecipePage());
         }
 
         private void MealPlannerButton_Click(object sender, RoutedEventArgs e)

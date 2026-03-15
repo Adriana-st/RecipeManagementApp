@@ -205,7 +205,7 @@ namespace RecipeApp.Views
                 // 2. Cuisine filter
                 var cuisineItem = CuisineFilter.SelectedItem as ComboBoxItem;
                 var cuisine = cuisineItem?.Content.ToString();
-                if (cuisine != "All Cuisines" && !string.IsNullOrEmpty(cuisine))
+                if (cuisine != "All" && !string.IsNullOrEmpty(cuisine))
                 {
                     filtered = filtered.Where(r =>
                         r.CuisineType != null &&
@@ -229,7 +229,7 @@ namespace RecipeApp.Views
                 // 5. Ingredient filter
                 var ingredientItem = IngredientFilter.SelectedItem as ComboBoxItem;
                 var ingredient = ingredientItem?.Content.ToString();
-                if (ingredient != "Any Ingredient" && !string.IsNullOrEmpty(ingredient))
+                if (ingredient != "Any" && !string.IsNullOrEmpty(ingredient))
                 {
                     filtered = filtered.Where(r =>
                         r.Ingredients != null &&
