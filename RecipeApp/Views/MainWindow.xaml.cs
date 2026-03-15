@@ -59,10 +59,7 @@ namespace RecipeApp
 
         private void MealPlannerButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Meal Planner page - Coming soon!\n\nThis will help you plan meals for the week.",
-                          "Coming Soon",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            MainFrame.Navigate (new MealPlannerPage());
         }
 
         private void ShoppingListButton_Click(object sender, RoutedEventArgs e)

@@ -74,8 +74,17 @@
     <Compile Include="Migrations\202603021126027_InitialCreate.Designer.cs">
       <DependentUpon>202603021126027_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202603151027433_AddMealPlans.cs" />
+    <Compile Include="Migrations\202603151027433_AddMealPlans.Designer.cs">
+      <DependentUpon>202603151027433_AddMealPlans.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\MealPlan.cs" />
+    <Compile Include="Services\MealPlanService.cs" />
     <Compile Include="Services\RecipeService.cs" />
+    <Compile Include="Views\AddMealDialog.xaml.cs">
+      <DependentUpon>AddMealDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AddRecipePage.xaml.cs">
       <DependentUpon>AddRecipePage.xaml</DependentUpon>
     </Compile>
@@ -85,12 +94,19 @@
     <Compile Include="Views\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MealPlannerPage.xaml.cs">
+      <DependentUpon>MealPlannerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RecipeDetailPage.xaml.cs">
       <DependentUpon>RecipeDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RecipePage.xaml.cs">
       <DependentUpon>RecipePage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\AddMealDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AddRecipePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -119,6 +135,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MealPlannerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RecipeDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -144,6 +164,9 @@
     </Compile>
     <EmbeddedResource Include="Migrations\202603021126027_InitialCreate.resx">
       <DependentUpon>202603021126027_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202603151027433_AddMealPlans.resx">
+      <DependentUpon>202603151027433_AddMealPlans.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -39,7 +39,7 @@ namespace RecipeApp.Views
 
         private void MealPlannerButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Meal Planner - Coming soon", "Coming Soon");
+            NavigationService?.Navigate(new MealPlannerPage());
         }
 
         private void ShoppingListButton_Click(object sender, RoutedEventArgs e)

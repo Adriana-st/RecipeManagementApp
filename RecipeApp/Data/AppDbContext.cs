@@ -32,6 +32,11 @@ namespace RecipeApp.Data
         public DbSet<Recipe> Recipes { get; set; }
 
         /// <summary>
+        /// Meal plans table in database
+        /// </summary>
+        public DbSet<MealPlan> MealPlans { get; set; }
+
+        /// <summary>
         /// Configure model relationships and constraints
         /// </summary>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -54,6 +59,20 @@ namespace RecipeApp.Data
             modelBuilder.Entity<Recipe>()
                 .Property(r => r.InstructionsJson)
                 .IsRequired();
+
+            // Configure MealPlan entity
+            modelBuilder.Entity<MealPlan>()
+                .HasKey(m => m.MealPlanId);
+
+            modelBuilder.Entity<MealPlan>()
+                .Property(m => m.MealType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<MealPlan>()
+                .Property(m => m.RecipeName)
+                .IsRequired()
+                .HasMaxLength(200);
         }
     }
 }
