@@ -64,10 +64,7 @@ namespace RecipeApp
 
         private void ShoppingListButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Shopping List page - Coming soon!\n\nThis will generate shopping lists from recipes.",
-                          "Coming Soon",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            MainFrame.Navigate(new ShoppingListPage());
         }
     }
 }

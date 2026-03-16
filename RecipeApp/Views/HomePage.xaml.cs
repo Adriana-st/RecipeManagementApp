@@ -44,7 +44,7 @@ namespace RecipeApp.Views
 
         private void ShoppingListButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Shopping List - Coming soon!", "Coming Soon");
+            NavigationService?.Navigate(new ShoppingListPage());
         }
     }
 }
