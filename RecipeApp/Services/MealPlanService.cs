@@ -58,12 +58,17 @@ namespace RecipeApp.Services
                         var mealPlans = db.MealPlans
                             .Where(m => m.Date >= weekStart && m.Date < weekEnd)
                             .OrderBy(m => m.Date)
-                            .ThenBy(m => m.MealType)
                             .ToList();
 
-                        System.Diagnostics.Debug.WriteLine($"✅ Loaded {mealPlans.Count} meal plans for week");
+                        // Sort by meal type order after loading from database
+                        var sortedMealPlans = mealPlans
+                            .OrderBy(m => m.Date)
+                            .ThenBy(m => GetMealTypeOrder(m.MealType))
+                            .ToList();
 
-                        return mealPlans;
+                        System.Diagnostics.Debug.WriteLine($"✅ Loaded {sortedMealPlans.Count} meal plans for week");
+
+                        return sortedMealPlans;
                     }
                 });
             }
@@ -73,6 +78,19 @@ namespace RecipeApp.Services
                 return new List<MealPlan>();
             }
         }
+
+        /// <summary>
+        /// Get sort order for meal types
+        /// </summary>
+        private int GetMealTypeOrder(string mealType)
+        {
+            if (mealType == "Breakfast") return 1;
+            if (mealType == "Lunch") return 2;
+            if (mealType == "Dinner") return 3;
+            if (mealType == "Snack") return 4;
+            return 5; // Unknown meal types go last
+        }
+
 
         /// <summary>
         /// Get meal plans for a specific day
@@ -90,10 +108,14 @@ namespace RecipeApp.Services
 
                         var mealPlans = db.MealPlans
                             .Where(m => m.Date >= dayStart && m.Date < dayEnd)
-                            .OrderBy(m => m.MealType)
                             .ToList();
 
-                        return mealPlans;
+                        // Sort by meal type order
+                        var sortedMealPlans = mealPlans
+                            .OrderBy(m => GetMealTypeOrder(m.MealType))
+                            .ToList();
+
+                        return sortedMealPlans;
                     }
                 });
             }
