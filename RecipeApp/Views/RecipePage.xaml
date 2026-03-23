@@ -44,12 +44,32 @@
                     <!-- Search Box -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Search" FontWeight="Bold" FontSize="12" Margin="0,0,0,3"/>
-                        <TextBox x:Name="SearchBox"
-                                Padding="8"
-                                FontSize="13"
-                                VerticalContentAlignment="Center"
-                                BorderBrush="#CCCCCC"
-                                BorderThickness="1"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+        
+                            <TextBox x:Name="SearchBox"
+                                    Grid.Column="0"
+                                    Padding="8"
+                                    FontSize="13"
+                                    VerticalContentAlignment="Center"
+                                    BorderBrush="#CCCCCC"
+                                    BorderThickness="1"
+                                    KeyUp="SearchBox_KeyUp"/>
+        
+                            <Button Grid.Column="1"
+                                   Content="🔍"
+                                   Click="ApplyFilters_Click"
+                                   Background="#A62B60"
+                                   Foreground="White"
+                                   BorderThickness="0"
+                                   Padding="10,0"
+                                   Margin="2,0,0,0"
+                                   FontSize="13"
+                                   Cursor="Hand"/>
+                        </Grid>
                     </StackPanel>
 
                     <!-- Cuisine Filter -->

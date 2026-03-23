@@ -236,6 +236,7 @@ namespace RecipeApp.Views
                         r.Ingredients.Any(i => i.ToLower().Contains(ingredient.ToLower())));
                 }
 
+
                 // Convert to list
                 var resultList = filtered.ToList();
 
@@ -271,6 +272,25 @@ namespace RecipeApp.Views
 
             // Show all recipes
             ApplyFilters();
+        }
+
+        /// <summary>
+        /// Search button click - apply filters
+        /// </summary>
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
+        /// <summary>
+        /// Allow pressing Enter in search box to search
+        /// </summary>
+        private void SearchBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ApplyFilters();
+            }
         }
 
         /// <summary>
