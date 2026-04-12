@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using RecipeApp.MAUI.Services;
-
 
 namespace RecipeApp.MAUI
 {
@@ -16,10 +14,6 @@ namespace RecipeApp.MAUI
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-
-            // Register Services
-            builder.Services.AddSingleton<DatabaseService>();
-            builder.Services.AddSingleton<RecipeApiService>();
 
 #if DEBUG
             builder.Logging.AddDebug();

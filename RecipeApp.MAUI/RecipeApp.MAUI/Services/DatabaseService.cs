@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using SQLite;
-using System.IO;
 using RecipeApp.MAUI.Models;
 
 namespace RecipeApp.MAUI.Services
@@ -16,28 +15,46 @@ namespace RecipeApp.MAUI.Services
     public class DatabaseService
     {
         private SQLiteAsyncConnection _database;
+        private bool _initialized = false;
+        private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1);
 
         public DatabaseService()
         {
-            InitializeDatabaseAsync().Wait();
+            // Don't initialize in constructor - causes deadlock!
+            System.Diagnostics.Debug.WriteLine("🔵 DatabaseService constructor");
         }
 
-        private async Task InitializeDatabaseAsync()
+        private async Task EnsureInitializedAsync()
         {
-            if (_database != null)
+            if (_initialized)
                 return;
 
-            // Get database path
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "RecipeApp.db3");
+            await _initLock.WaitAsync();
+            try
+            {
+                if (_initialized)
+                    return;
 
-            // Create connection
-            _database = new SQLiteAsyncConnection(dbPath);
+                System.Diagnostics.Debug.WriteLine("🔵 Initializing database...");
 
-            // Create tables
-            await _database.CreateTableAsync<Recipe>();
-            await _database.CreateTableAsync<MealPlan>();
+                // Get database path
+                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "RecipeApp.db3");
+                System.Diagnostics.Debug.WriteLine($"🔵 Database path: {dbPath}");
 
-            System.Diagnostics.Debug.WriteLine($"✅ Database initialized at: {dbPath}");
+                // Create connection
+                _database = new SQLiteAsyncConnection(dbPath);
+
+                // Create tables
+                await _database.CreateTableAsync<Recipe>();
+                await _database.CreateTableAsync<MealPlan>();
+
+                _initialized = true;
+                System.Diagnostics.Debug.WriteLine("✅ Database initialized successfully");
+            }
+            finally
+            {
+                _initLock.Release();
+            }
         }
 
         #region Recipe Operations
@@ -48,6 +65,8 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<List<Recipe>> GetFavouritesAsync()
         {
+            await EnsureInitializedAsync();
+
             var recipes = await _database.Table<Recipe>()
                 .Where(r => r.IsFavourite)
                 .OrderByDescending(r => r.DateAdded)
@@ -67,6 +86,8 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<int> SaveRecipeAsync(Recipe recipe)
         {
+            await EnsureInitializedAsync();
+
             recipe.PrepareForDatabase();
             recipe.IsFavourite = true;
 
@@ -102,6 +123,7 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<int> DeleteRecipeAsync(Recipe recipe)
         {
+            await EnsureInitializedAsync();
             return await _database.DeleteAsync(recipe);
         }
 
@@ -110,6 +132,8 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<bool> IsRecipeSavedAsync(int? apiId)
         {
+            await EnsureInitializedAsync();
+
             if (!apiId.HasValue)
                 return false;
 
@@ -129,6 +153,8 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<List<MealPlan>> GetWeekMealPlansAsync(DateTime weekStart)
         {
+            await EnsureInitializedAsync();
+
             var weekEnd = weekStart.AddDays(7);
 
             return await _database.Table<MealPlan>()
@@ -142,6 +168,7 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<int> AddMealPlanAsync(MealPlan mealPlan)
         {
+            await EnsureInitializedAsync();
             return await _database.InsertAsync(mealPlan);
         }
 
@@ -150,6 +177,7 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<int> DeleteMealPlanAsync(MealPlan mealPlan)
         {
+            await EnsureInitializedAsync();
             return await _database.DeleteAsync(mealPlan);
         }
 
@@ -158,6 +186,8 @@ namespace RecipeApp.MAUI.Services
         /// </summary>
         public async Task<int> ClearWeekAsync(DateTime weekStart)
         {
+            await EnsureInitializedAsync();
+
             var meals = await GetWeekMealPlansAsync(weekStart);
 
             int count = 0;
