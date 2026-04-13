@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:RecipeApp.MAUI.ViewModels"
+             x:Class="RecipeApp.MAUI.Views.RecipeDetailPage"
+             x:DataType="viewmodel:RecipeDetailViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <!-- Recipe Image -->
+            <Image Source="{Binding Recipe.ImageUrl}"
+                   Aspect="AspectFill"
+                   HeightRequest="250"/>
+
+            <VerticalStackLayout Padding="20" Spacing="15">
+
+                <!-- Title & Cuisine -->
+                <Label Text="{Binding Recipe.Name}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#333"/>
+
+                <Label Text="{Binding Recipe.CuisineType}"
+                       FontSize="16"
+                       TextColor="#A62B60"
+                       FontAttributes="Bold"/>
+
+                <!-- Info Row -->
+                <Frame BackgroundColor="#F5F5F5" CornerRadius="10" Padding="15" HasShadow="False">
+                    <Grid ColumnDefinitions="*,*,*">
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                            <Label Text="⏱️" FontSize="22" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding Recipe.TotalTimeMinutes, StringFormat='{0} min'}"
+                                   FontSize="14" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Total Time" FontSize="11" TextColor="Gray"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                            <Label Text="👥" FontSize="22" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding Recipe.Servings}"
+                                   FontSize="14" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Servings" FontSize="11" TextColor="Gray"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                            <Label Text="📊" FontSize="22" HorizontalTextAlignment="Center"/>
+                            <Label Text="{Binding Recipe.Difficulty}"
+                                   FontSize="14" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Difficulty" FontSize="11" TextColor="Gray"
+                                   HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- Favourite Button -->
+                <Button Text="{Binding FavouriteButtonText}"
+                        BackgroundColor="{Binding FavouriteButtonColor}"
+                        TextColor="White"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        Padding="15"
+                        Command="{Binding ToggleFavouriteCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                <!-- Ingredients -->
+                <Label Text="🥗 Ingredients"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="#A62B60"
+                       Margin="0,10,0,0"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Recipe.Ingredients}" Spacing="6">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="•" TextColor="#A62B60" FontSize="16" VerticalOptions="Start"/>
+                                <Label Text="{Binding .}" FontSize="15" TextColor="#333"
+                                       VerticalOptions="Start"/>
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Instructions -->
+                <Label Text="📋 Instructions"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="#A62B60"
+                       Margin="0,10,0,0"/>
+
+                <VerticalStackLayout Spacing="12">
+                    <BindableLayout.ItemsSource>
+                        <x:Array Type="{x:Type x:String}"/>
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Frame BackgroundColor="#FFF5F8" CornerRadius="8"
+                                   Padding="12" HasShadow="False">
+                                <Label Text="{Binding .}" FontSize="15" TextColor="#333"/>
+                            </Frame>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Instructions with step numbers (correct binding) -->
+                <VerticalStackLayout x:Name="InstructionsLayout" Spacing="12"/>
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

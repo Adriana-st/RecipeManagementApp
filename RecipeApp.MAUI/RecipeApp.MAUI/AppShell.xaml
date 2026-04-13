@@ -11,27 +11,40 @@
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="#8A2350" Padding="20" HeightRequest="150">
             <VerticalStackLayout VerticalOptions="Center">
-                <Label Text="🍳"
-                       FontSize="48"
-                       HorizontalTextAlignment="Center"/>
+                <Label Text="🍳" FontSize="48" HorizontalTextAlignment="Center"/>
                 <Label Text="Recipe Management"
-                       FontSize="20"
-                       FontAttributes="Bold"
-                       TextColor="White"
-                       HorizontalTextAlignment="Center"/>
+                       FontSize="20" FontAttributes="Bold"
+                       TextColor="White" HorizontalTextAlignment="Center"/>
                 <Label Text="Your culinary companion"
-                       FontSize="12"
-                       TextColor="White"
+                       FontSize="12" TextColor="White"
                        HorizontalTextAlignment="Center"/>
             </VerticalStackLayout>
         </Grid>
     </Shell.FlyoutHeader>
 
-    <!-- Menu Items -->
-    <!-- Only HomePage for now -->
+    <!-- Pages -->
     <FlyoutItem Title="Home" Icon="home.png" Route="HomePage">
-        <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
+        <ShellContent ContentTemplate="{DataTemplate local:HomePage}"/>
     </FlyoutItem>
 
-    <!-- TODO: Add other pages when they are created -->
+    <FlyoutItem Title="Recipes" Icon="recipes.png" Route="RecipesPage">
+        <ShellContent ContentTemplate="{DataTemplate local:RecipesPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Favourites" Icon="favourites.png" Route="FavouritesPage">
+        <ShellContent ContentTemplate="{DataTemplate local:FavouritesPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Add Recipe" Icon="add.png" Route="AddRecipePage">
+        <ShellContent ContentTemplate="{DataTemplate local:AddRecipePage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Meal Planner" Icon="planner.png" Route="MealPlannerPage">
+        <ShellContent ContentTemplate="{DataTemplate local:MealPlannerPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Shopping List" Icon="shopping.png" Route="ShoppingListPage">
+        <ShellContent ContentTemplate="{DataTemplate local:ShoppingListPage}"/>
+    </FlyoutItem>
+
 </Shell>
