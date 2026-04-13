@@ -10,6 +10,7 @@ namespace RecipeApp.MAUI.ViewModels
     public partial class ShoppingListViewModel : BaseViewModel
     {
         private readonly DatabaseService _databaseService;
+        private readonly RecipeApiService _recipeApiService;
 
         public ObservableCollection<ShoppingItem> ShoppingItems { get; } = new();
 
@@ -19,9 +20,10 @@ namespace RecipeApp.MAUI.ViewModels
         [ObservableProperty]
         private string _weekRangeText = string.Empty;
 
-        public ShoppingListViewModel(DatabaseService databaseService)
+        public ShoppingListViewModel(DatabaseService databaseService, RecipeApiService recipeApiService)
         {
             _databaseService = databaseService;
+            _recipeApiService = recipeApiService;
             Title = "Shopping List";
         }
 
@@ -34,7 +36,6 @@ namespace RecipeApp.MAUI.ViewModels
             {
                 IsBusy = true;
 
-                // Get current week's meal plans
                 var today = DateTime.Today;
                 var daysFromMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
                 var weekStart = today.AddDays(-daysFromMonday);
@@ -51,25 +52,30 @@ namespace RecipeApp.MAUI.ViewModels
                     return;
                 }
 
-                // Get all favourites to match recipes
+                // Get favourites and all API recipes
                 var favourites = await _databaseService.GetFavouritesAsync();
+                var apiRecipes = await _recipeApiService.GetRecipesAsync();
 
-                // Aggregate ingredients from all meals this week
+                // Merge both sources into one lookup
+                var allKnownRecipes = favourites
+                    .Concat(apiRecipes)
+                    .GroupBy(r => r.Name.ToLowerInvariant().Trim())
+                    .Select(g => g.First())
+                    .ToList();
+
                 var allIngredients = new List<string>();
 
                 foreach (var meal in mealPlans)
                 {
-                    var recipe = favourites.FirstOrDefault(f =>
-                        f.Name.Equals(meal.RecipeName, StringComparison.OrdinalIgnoreCase));
+                    var recipe = allKnownRecipes.FirstOrDefault(r =>
+                        r.Name.Equals(meal.RecipeName, StringComparison.OrdinalIgnoreCase));
 
-                    if (recipe?.Ingredients != null)
+                    if (recipe?.Ingredients != null && recipe.Ingredients.Any())
                         allIngredients.AddRange(recipe.Ingredients);
                     else
-                        // If recipe not found in favourites, just add recipe name as item
                         allIngredients.Add($"Ingredients for: {meal.RecipeName}");
                 }
 
-                // Deduplicate and build shopping items
                 ShoppingItems.Clear();
 
                 var grouped = allIngredients

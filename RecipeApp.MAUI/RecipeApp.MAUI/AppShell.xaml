@@ -22,6 +22,12 @@
         </Grid>
     </Shell.FlyoutHeader>
 
+    <Shell.Resources>
+        <Style TargetType="Label" Class="FlyoutItemLabelStyle">
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+    </Shell.Resources>
+
     <!-- Pages -->
     <FlyoutItem Title="Home" Icon="home.png" Route="HomePage">
         <ShellContent ContentTemplate="{DataTemplate local:HomePage}"/>

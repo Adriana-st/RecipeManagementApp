@@ -43,8 +43,23 @@ namespace RecipeApp.MAUI.ViewModels
             try
             {
                 IsBusy = true;
-                var recipes = await _recipeApiService.GetRecipesAsync();
-                _allRecipes = recipes;
+
+                // Load API recipes and custom recipes in parallel
+                var apiTask = _recipeApiService.GetRecipesAsync();
+                var customTask = _databaseService.GetCustomRecipesAsync();
+
+                await Task.WhenAll(apiTask, customTask);
+
+                var apiRecipes = apiTask.Result;
+                var customRecipes = customTask.Result;
+
+                // Mark custom recipes with a label
+                foreach (var r in customRecipes)
+                    r.Source = "Custom";
+
+                // Merge — custom recipes appear at the top
+                _allRecipes = customRecipes.Concat(apiRecipes).ToList();
+
                 ApplyFilters();
             }
             catch (Exception ex)

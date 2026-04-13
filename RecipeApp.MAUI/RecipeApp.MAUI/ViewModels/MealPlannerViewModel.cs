@@ -9,6 +9,7 @@ namespace RecipeApp.MAUI.ViewModels
     public partial class MealPlannerViewModel : BaseViewModel
     {
         private readonly DatabaseService _databaseService;
+        private readonly RecipeApiService _recipeApiService;
 
         [ObservableProperty]
         private DateTime _currentWeekStart;
@@ -18,12 +19,12 @@ namespace RecipeApp.MAUI.ViewModels
 
         public ObservableCollection<DayMeals> WeekMeals { get; } = new();
 
-        public MealPlannerViewModel(DatabaseService databaseService)
+        public MealPlannerViewModel(DatabaseService databaseService, RecipeApiService recipeApiService)
         {
             _databaseService = databaseService;
+            _recipeApiService = recipeApiService;
             Title = "Meal Planner";
 
-            // Start on current Monday
             var today = DateTime.Today;
             var daysFromMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
             CurrentWeekStart = today.AddDays(-daysFromMonday);
@@ -104,51 +105,127 @@ namespace RecipeApp.MAUI.ViewModels
 
             if (mealType is null || mealType == "Cancel") return;
 
-            // Step 2: Pick from favourites or enter name
-            var favourites = await _databaseService.GetFavouritesAsync();
+            // Step 2: Pick source
+            string source = await Shell.Current.DisplayActionSheet(
+                "Add Recipe From", "Cancel", null,
+                "⭐ My Favourites", "🔍 Search All Recipes", "✏️ Enter Manually");
 
-            string recipeName;
+            if (source is null || source == "Cancel") return;
 
-            if (favourites.Any())
+            string recipeName = null;
+
+            if (source == "⭐ My Favourites")
             {
-                var options = favourites.Select(f => f.Name).ToArray();
-                var allOptions = options.Append("✏️ Enter manually").ToArray();
+                var favourites = await _databaseService.GetFavouritesAsync();
+
+                if (!favourites.Any())
+                {
+                    await Shell.Current.DisplayAlert("No Favourites",
+                        "You have no saved favourites yet. Try searching or entering manually.", "OK");
+                    return;
+                }
+
+                var options = favourites.Select(r => r.Name).ToArray();
 
                 string selected = await Shell.Current.DisplayActionSheet(
-                    "Choose a Recipe", "Cancel", null, allOptions);
+                    "Choose a Favourite", "Cancel", null, options);
 
                 if (selected is null || selected == "Cancel") return;
-
-                if (selected == "✏️ Enter manually")
-                {
-                    recipeName = await Shell.Current.DisplayPromptAsync(
-                        "Recipe Name", "Enter recipe name:");
-                    if (string.IsNullOrWhiteSpace(recipeName)) return;
-                }
-                else
-                {
-                    recipeName = selected;
-                }
+                recipeName = selected;
             }
-            else
+            else if (source == "🔍 Search All Recipes")
+            {
+                string searchTerm = await Shell.Current.DisplayPromptAsync(
+                    "Search Recipes",
+                    "Type to search (leave blank to see all):",
+                    placeholder: "e.g. pasta, chicken...");
+
+                if (searchTerm is null) return;
+
+                var apiRecipes = await _recipeApiService.GetRecipesAsync();
+
+                var filtered = string.IsNullOrWhiteSpace(searchTerm)
+                    ? apiRecipes
+                    : apiRecipes.Where(r =>
+                        (r.Name?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                        (r.CuisineType?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false))
+                    .ToList();
+
+                if (!filtered.Any())
+                {
+                    await Shell.Current.DisplayAlert("No Results",
+                        $"No recipes found for \"{searchTerm}\".", "OK");
+                    return;
+                }
+
+                int pageSize = 15;
+                int currentPage = 0;
+                int totalPages = (int)Math.Ceiling(filtered.Count / (double)pageSize);
+                string selected = null;
+
+                while (selected is null)
+                {
+                    var page = filtered
+                        .Skip(currentPage * pageSize)
+                        .Take(pageSize)
+                        .Select(r => r.Name)
+                        .ToList();
+
+                    bool hasNext = currentPage < totalPages - 1;
+                    bool hasPrev = currentPage > 0;
+
+                    // Add navigation options at the bottom
+                    if (hasNext) page.Add("→ Next Page");
+                    if (hasPrev) page.Add("← Previous Page");
+
+                    string choice = await Shell.Current.DisplayActionSheet(
+                        $"Select Recipe (page {currentPage + 1} of {totalPages})",
+                        "Cancel", null,
+                        page.ToArray());
+
+                    if (choice is null || choice == "Cancel") return;
+
+                    if (choice == "→ Next Page")
+                    {
+                        currentPage++;
+                        continue;
+                    }
+
+                    if (choice == "← Previous Page")
+                    {
+                        currentPage--;
+                        continue;
+                    }
+
+                    selected = choice;
+                }
+
+                recipeName = selected;
+            }
+            else if (source == "✏️ Enter Manually")
             {
                 recipeName = await Shell.Current.DisplayPromptAsync(
-                    "Recipe Name", "Enter recipe name:");
+                    "Recipe Name",
+                    "Enter the recipe name:",
+                    placeholder: "e.g. Grandma's Lasagne");
+
                 if (string.IsNullOrWhiteSpace(recipeName)) return;
             }
+
+            if (string.IsNullOrWhiteSpace(recipeName)) return;
 
             // Save meal plan
             var mealPlan = new MealPlan
             {
                 Date = dayMeals.Date,
                 MealType = mealType,
-                RecipeName = recipeName
+                RecipeName = recipeName.Trim()
             };
 
             await _databaseService.AddMealPlanAsync(mealPlan);
             dayMeals.Meals.Add(mealPlan);
 
-            // Re-sort meals in correct order
+            // Re-sort
             var sorted = dayMeals.Meals
                 .OrderBy(m => GetMealTypeOrder(m.MealType))
                 .ToList();

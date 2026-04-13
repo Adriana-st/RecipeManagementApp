@@ -29,7 +29,8 @@ namespace RecipeApp.MAUI.Services
         {
             try
             {
-                var response = await _httpClient.GetStringAsync(BaseUrl);
+                // Fetch up to 100 recipes (DummyJSON max per request)
+                var response = await _httpClient.GetStringAsync($"{BaseUrl}?limit=100&skip=0");
                 var recipeResponse = JsonConvert.DeserializeObject<RecipeResponse>(response);
 
                 return recipeResponse?.Recipes ?? new List<Recipe>();

@@ -96,21 +96,7 @@
                        TextColor="#A62B60"
                        Margin="0,10,0,0"/>
 
-                <VerticalStackLayout Spacing="12">
-                    <BindableLayout.ItemsSource>
-                        <x:Array Type="{x:Type x:String}"/>
-                    </BindableLayout.ItemsSource>
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="x:String">
-                            <Frame BackgroundColor="#FFF5F8" CornerRadius="8"
-                                   Padding="12" HasShadow="False">
-                                <Label Text="{Binding .}" FontSize="15" TextColor="#333"/>
-                            </Frame>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-
-                <!-- Instructions with step numbers (correct binding) -->
+                <!-- Built in code-behind with step numbers -->
                 <VerticalStackLayout x:Name="InstructionsLayout" Spacing="12"/>
 
             </VerticalStackLayout>

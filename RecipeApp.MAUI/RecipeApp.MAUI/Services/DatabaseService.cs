@@ -144,6 +144,24 @@ namespace RecipeApp.MAUI.Services
             return count > 0;
         }
 
+        /// <summary>
+        /// Get all custom recipes added by the user
+        /// </summary>
+        public async Task<List<Recipe>> GetCustomRecipesAsync()
+        {
+            await EnsureInitializedAsync();
+
+            var recipes = await _database.Table<Recipe>()
+                .Where(r => r.Source == "Custom")
+                .OrderByDescending(r => r.DateAdded)
+                .ToListAsync();
+
+            foreach (var recipe in recipes)
+                recipe.LoadFromDatabase();
+
+            return recipes;
+        }
+
         #endregion
 
         #region Meal Plan Operations

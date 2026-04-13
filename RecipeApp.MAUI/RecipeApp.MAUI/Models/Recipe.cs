@@ -25,6 +25,8 @@ namespace RecipeApp.MAUI.Models
 
         public string Name { get; set; }
 
+        [Ignore]
+        public bool IsCustom => Source == "Custom";
         public string Description { get; set; }
 
         // Store as JSON string in database

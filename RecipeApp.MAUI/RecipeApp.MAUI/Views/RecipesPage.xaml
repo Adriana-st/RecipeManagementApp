@@ -67,9 +67,20 @@
                                                TextColor="#333"
                                                LineBreakMode="TailTruncation"/>
 
-                                        <Label Text="{Binding CuisineType}"
-                                               FontSize="13"
-                                               TextColor="#A62B60"/>
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="{Binding CuisineType}"
+                                                   FontSize="13"
+                                                   TextColor="#A62B60"/>    
+                                            <Frame IsVisible="{Binding IsCustom}"
+                                                   BackgroundColor="#97BC62"
+                                                   CornerRadius="4"
+                                                   Padding="6,2"
+                                                   HasShadow="False">
+                                                <Label Text="⭐ Custom"
+                                                       FontSize="11"
+                                                       TextColor="White"/>
+                                            </Frame>
+                                        </HorizontalStackLayout>
 
                                         <HorizontalStackLayout Spacing="10">
                                             <Label Text="{Binding Difficulty}"
