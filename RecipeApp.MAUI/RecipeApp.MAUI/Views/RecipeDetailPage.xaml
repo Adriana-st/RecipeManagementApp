@@ -10,7 +10,7 @@
         <VerticalStackLayout Spacing="0">
 
             <!-- Recipe Image -->
-            <Image Source="{Binding Recipe.ImageUrl}"
+            <Image Source="{Binding Recipe.DisplayImage}"
                    Aspect="AspectFill"
                    HeightRequest="250"/>
 

@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:RecipeApp.MAUI.Views"
     Shell.FlyoutBehavior="Flyout"
-    FlyoutBackgroundColor="#A62B60">
+    FlyoutBackgroundColor="#A62B60"
+    Shell.ForegroundColor="White">
 
     <!-- Flyout Header -->
     <Shell.FlyoutHeader>

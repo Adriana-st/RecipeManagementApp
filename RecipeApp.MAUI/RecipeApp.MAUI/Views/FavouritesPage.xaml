@@ -11,7 +11,7 @@
 
         <!-- Header -->
         <Frame Grid.Row="0" BackgroundColor="#A62B60" CornerRadius="0" Padding="20" HasShadow="False">
-            <Label Text="❤️ My Favourite Recipes"
+            <Label Text="🤍 My Favourite Recipes"
                    FontSize="20"
                    FontAttributes="Bold"
                    TextColor="White"
@@ -51,7 +51,7 @@
 
                                     <!-- Image -->
                                     <Image Grid.Column="0"
-                                           Source="{Binding ImageUrl}"
+                                           Source="{Binding DisplayImage}"
                                            Aspect="AspectFill"
                                            HeightRequest="100"
                                            WidthRequest="120"/>

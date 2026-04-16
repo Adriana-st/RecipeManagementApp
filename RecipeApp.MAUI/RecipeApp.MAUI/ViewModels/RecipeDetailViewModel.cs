@@ -17,7 +17,7 @@ namespace RecipeApp.MAUI.ViewModels
         private bool _isFavourite;
 
         [ObservableProperty]
-        private string _favouriteButtonText = "❤️ Add to Favourites";
+        private string _favouriteButtonText = "🤍 Add to Favourites";
 
         [ObservableProperty]
         private Color _favouriteButtonColor = Color.FromArgb("#A62B60");
@@ -50,7 +50,7 @@ namespace RecipeApp.MAUI.ViewModels
             }
             else
             {
-                FavouriteButtonText = "❤️ Add to Favourites";
+                FavouriteButtonText = "🤍 Add to Favourites";
                 FavouriteButtonColor = Color.FromArgb("#A62B60");
             }
         }

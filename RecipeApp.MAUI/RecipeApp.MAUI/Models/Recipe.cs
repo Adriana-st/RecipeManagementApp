@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using SQLite;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SQLite;
-using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
+
 
 namespace RecipeApp.MAUI.Models
 {
@@ -13,8 +16,12 @@ namespace RecipeApp.MAUI.Models
     /// DatabaseId: Always the primary key
     /// ApiId: Only set for API recipes, null for custom
     /// </summary>
-    public class Recipe
+    public class Recipe : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         // Database Primary Key
         [PrimaryKey, AutoIncrement]
         public int DatabaseId { get; set; }
@@ -24,9 +31,7 @@ namespace RecipeApp.MAUI.Models
         public int? ApiId { get; set; }
 
         public string Name { get; set; }
-
-        [Ignore]
-        public bool IsCustom => Source == "Custom";
+        
         public string Description { get; set; }
 
         // Store as JSON string in database
@@ -41,7 +46,6 @@ namespace RecipeApp.MAUI.Models
 
         public string InstructionsJson { get; set; }
 
-        // API uses "image", we use ImageUrl internally
         [JsonProperty("image")]
         public string ImageUrl { get; set; }
 
@@ -62,7 +66,19 @@ namespace RecipeApp.MAUI.Models
         public string Difficulty { get; set; }
 
         // Database fields
-        public bool IsFavourite { get; set; }
+        private bool _isFavourite;
+        public bool IsFavourite
+        {
+            get => _isFavourite;
+            set
+            {
+                if (_isFavourite != value)
+                {
+                    _isFavourite = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public DateTime DateAdded { get; set; }
 
@@ -73,9 +89,20 @@ namespace RecipeApp.MAUI.Models
         [Ignore]
         public int TotalTimeMinutes => PrepTimeMinutes + CookTimeMinutes;
 
-        // For displaying ingredients in list view
         [Ignore]
-        public string IngredientsDisplay { get; set; }
+        public bool IsCustom => Source == "Custom";
+
+        // For displaying in list view - show API image or default if missing
+        [Ignore]
+        public string DisplayImage => string.IsNullOrWhiteSpace(ImageUrl)
+            ? "no_image.png"
+            : ImageUrl;
+
+        // For displaying in list view - show first 3 ingredients or empty if none
+        [Ignore]
+        public string IngredientsDisplay => Ingredients?.Any() == true
+            ? "🥗 " + string.Join(", ", Ingredients.Take(3)) + (Ingredients.Count > 3 ? "..." : "")
+            : string.Empty;
 
         public Recipe()
         {
@@ -96,23 +123,13 @@ namespace RecipeApp.MAUI.Models
 
         public void LoadFromDatabase()
         {
-            if (!string.IsNullOrEmpty(IngredientsJson))
-            {
-                Ingredients = JsonConvert.DeserializeObject<List<string>>(IngredientsJson) ?? new List<string>();
-            }
-            else
-            {
-                Ingredients = new List<string>();
-            }
+            Ingredients = !string.IsNullOrEmpty(IngredientsJson)
+                ? JsonConvert.DeserializeObject<List<string>>(IngredientsJson) ?? new List<string>()
+                : new List<string>();
 
-            if (!string.IsNullOrEmpty(InstructionsJson))
-            {
-                Instructions = JsonConvert.DeserializeObject<List<string>>(InstructionsJson) ?? new List<string>();
-            }
-            else
-            {
-                Instructions = new List<string>();
-            }
+            Instructions = !string.IsNullOrEmpty(InstructionsJson)
+                ? JsonConvert.DeserializeObject<List<string>>(InstructionsJson) ?? new List<string>()
+                : new List<string>();
         }
     }
 }

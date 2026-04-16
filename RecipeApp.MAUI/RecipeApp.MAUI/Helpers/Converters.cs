@@ -55,4 +55,56 @@ namespace RecipeApp.MAUI.Helpers
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Returns true if string is not null or empty — used to show image preview
+    /// </summary>
+    public class IsNotNullOrEmptyConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => !string.IsNullOrWhiteSpace(value as string);
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Save button text — Saved vs Save to Favourites
+    /// </summary>
+    public class BoolToSaveTextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => value is bool b && b ? "Saved" : "🤍 Save";
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Save button colour — green when saved, pink when not
+    /// </summary>
+    public class BoolToSaveColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => value is bool b && b
+                ? Color.FromArgb("#97BC62")
+                : Color.FromArgb("#A62B60");
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Filter button colour — darker when filters are visible
+    /// </summary>
+    public class BoolToFilterButtonColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => value is bool b && b
+                ? Color.FromArgb("#7A1F48")
+                : Color.FromArgb("#A62B60");
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
 }

@@ -1,10 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.VisualBasic;
 using RecipeApp.MAUI.Models;
 using RecipeApp.MAUI.Services;
 using System.Collections.ObjectModel;
-using System.Xml.Linq;
 
 namespace RecipeApp.MAUI.ViewModels
 {
@@ -19,7 +17,7 @@ namespace RecipeApp.MAUI.ViewModels
         private string _description = string.Empty;
 
         [ObservableProperty]
-        private string _cuisineType = string.Empty;
+        private string _selectedCuisine = "Italian";
 
         [ObservableProperty]
         private string _selectedDifficulty = "Easy";
@@ -34,6 +32,9 @@ namespace RecipeApp.MAUI.ViewModels
         private int _servings = 2;
 
         [ObservableProperty]
+        private string _imageUrl = string.Empty;
+
+        [ObservableProperty]
         private string _newIngredient = string.Empty;
 
         [ObservableProperty]
@@ -41,6 +42,13 @@ namespace RecipeApp.MAUI.ViewModels
 
         public ObservableCollection<string> Ingredients { get; } = new();
         public ObservableCollection<string> Instructions { get; } = new();
+
+        public List<string> CuisineOptions { get; } = new()
+        {
+            "Italian", "Asian", "Chinese", "Japanese", "Thai",
+            "Indian", "Mexican", "American", "Mediterranean",
+            "French", "Greek", "Middle Eastern", "Other"
+        };
 
         public List<string> DifficultyOptions { get; } = new() { "Easy", "Medium", "Hard" };
 
@@ -83,7 +91,6 @@ namespace RecipeApp.MAUI.ViewModels
         [RelayCommand]
         public async Task SaveRecipeAsync()
         {
-            // Validation
             if (string.IsNullOrWhiteSpace(Name))
             {
                 await Shell.Current.DisplayAlert("Validation", "Please enter a recipe name.", "OK");
@@ -108,20 +115,20 @@ namespace RecipeApp.MAUI.ViewModels
                 {
                     Name = Name.Trim(),
                     Description = Description.Trim(),
-                    CuisineType = CuisineType.Trim(),
+                    CuisineType = SelectedCuisine,
                     Difficulty = SelectedDifficulty,
                     PrepTimeMinutes = PrepTimeMinutes,
                     CookTimeMinutes = CookTimeMinutes,
                     Servings = Servings,
                     Ingredients = Ingredients.ToList(),
                     Instructions = Instructions.ToList(),
+                    ImageUrl = string.IsNullOrWhiteSpace(ImageUrl) ? null : ImageUrl.Trim(),
                     Source = "Custom",
                     IsFavourite = true,
                     DateAdded = DateTime.Now
                 };
 
                 await _databaseService.SaveRecipeAsync(recipe);
-
                 await Shell.Current.DisplayAlert("Saved!", $"{recipe.Name} has been saved!", "OK");
                 ClearForm();
                 await Shell.Current.GoToAsync("..");
@@ -141,11 +148,12 @@ namespace RecipeApp.MAUI.ViewModels
         {
             Name = string.Empty;
             Description = string.Empty;
-            CuisineType = string.Empty;
+            SelectedCuisine = "Italian";
             SelectedDifficulty = "Easy";
             PrepTimeMinutes = 0;
             CookTimeMinutes = 0;
             Servings = 2;
+            ImageUrl = string.Empty;
             Ingredients.Clear();
             Instructions.Clear();
         }

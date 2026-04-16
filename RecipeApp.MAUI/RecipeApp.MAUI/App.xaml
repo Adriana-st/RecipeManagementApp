@@ -15,6 +15,10 @@
             <helpers:BoolToColorConverter x:Key="BoolToColorConverter"/>
             <helpers:BoolToStrikethroughConverter x:Key="BoolToStrikethroughConverter"/>
             <helpers:BoolToGrayConverter x:Key="BoolToGrayConverter"/>
+            <helpers:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter"/>
+            <helpers:BoolToSaveTextConverter x:Key="BoolToSaveTextConverter"/>
+            <helpers:BoolToSaveColorConverter x:Key="BoolToSaveColorConverter"/>
+            <helpers:BoolToFilterButtonColorConverter x:Key="BoolToFilterButtonColorConverter"/>
 
         </ResourceDictionary>
     </Application.Resources>

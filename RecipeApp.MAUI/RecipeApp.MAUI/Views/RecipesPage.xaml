@@ -7,100 +7,189 @@
              x:DataType="viewmodel:RecipesViewModel"
              Title="{Binding Title}">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
-        <!-- Search & Filter Panel -->
-        <VerticalStackLayout Grid.Row="0" BackgroundColor="#F5F5F5" Padding="15" Spacing="10">
-
-            <SearchBar Placeholder="Search recipes..."
+        <!-- Search Bar Row -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto"
+              Padding="15,10" ColumnSpacing="10"
+              BackgroundColor="#F5F5F5">
+            <SearchBar Grid.Column="0"
+                       Placeholder="Search by dish name or ingredient..."
                        Text="{Binding SearchText}"
                        SearchCommand="{Binding ApplyFiltersCommand}"
                        BackgroundColor="White"/>
+            <Button Grid.Column="1"
+                    Text="Filter"
+                    BackgroundColor="{Binding FiltersVisible, Converter={StaticResource BoolToFilterButtonColorConverter}}"
+                    TextColor="White"
+                    CornerRadius="8"
+                    Padding="12,0"
+                    Clicked="OnToggleFiltersClicked"/>
+        </Grid>
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+        <!-- Collapsible Filter Panel -->
+        <VerticalStackLayout Grid.Row="1"
+                             IsVisible="{Binding FiltersVisible}"
+                             BackgroundColor="#EFEFEF"
+                             Padding="15,10" Spacing="8">
+
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8">
                 <Picker Grid.Column="0"
                         Title="Cuisine"
                         ItemsSource="{Binding CuisineOptions}"
                         SelectedItem="{Binding SelectedCuisine}"
+                        FontSize="13"
                         SelectedIndexChanged="OnFilterChanged"/>
-
                 <Picker Grid.Column="1"
                         Title="Difficulty"
                         ItemsSource="{Binding DifficultyOptions}"
                         SelectedItem="{Binding SelectedDifficulty}"
+                        FontSize="13"
                         SelectedIndexChanged="OnFilterChanged"/>
+                <Picker Grid.Column="2"
+                        Title="Protein"
+                        ItemsSource="{Binding ProteinOptions}"
+                        SelectedItem="{Binding SelectedProtein}"
+                        FontSize="13"
+                        SelectedIndexChanged="OnFilterChanged"/>
+
+                <VerticalStackLayout Grid.Column="3" Spacing="2">
+                    <Label Text="{Binding MaxTime, StringFormat='Max: {0} min'}"
+                           FontSize="11" TextColor="Gray"
+                           HorizontalTextAlignment="Center"/>
+                    <Slider Minimum="10" Maximum="300"
+                            Value="{Binding MaxTime}"
+                            DragCompleted="OnSliderDragCompleted"
+                            ThumbColor="#A62B60"
+                            MinimumTrackColor="#A62B60"/>
+                </VerticalStackLayout>
             </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        Text="Apply Filters"
+                        BackgroundColor="#A62B60"
+                        TextColor="White"
+                        FontSize="13"
+                        CornerRadius="8"
+                        Clicked="OnApplyFiltersClicked"/>
+                <Button Grid.Column="1"
+                        Text="Reset"
+                        BackgroundColor="#888"
+                        TextColor="White"
+                        FontSize="13"
+                        CornerRadius="8"
+                        Clicked="OnResetFiltersClicked"/>
+            </Grid>
+
         </VerticalStackLayout>
 
         <!-- Recipes List -->
-        <RefreshView Grid.Row="1"
+        <RefreshView Grid.Row="2"
                      Command="{Binding LoadRecipesCommand}"
                      IsRefreshing="{Binding IsBusy}">
-            <CollectionView ItemsSource="{Binding Recipes}"
-                            SelectionMode="None">
+            <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None">
 
                 <CollectionView.EmptyView>
-                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10" Padding="40">
-                        <Label Text="🍽️" FontSize="48" HorizontalTextAlignment="Center"/>
-                        <Label Text="No recipes found" FontSize="18" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Center"
+                                         Spacing="10" Padding="40">
+                        <Label Text="No recipes found"
+                               FontSize="18" TextColor="Gray"
+                               HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Recipe">
                         <Grid Padding="15,8">
-                            <Frame BackgroundColor="White" CornerRadius="10" Padding="0" HasShadow="True">
-                                <Grid ColumnDefinitions="120,*" >
+                            <Frame BackgroundColor="White" CornerRadius="10"
+                                   Padding="0" HasShadow="True"
+                                   IsClippedToBounds="True">
 
-                                    <!-- Recipe Image -->
+                                <Grid ColumnDefinitions="150,*">
+
+                                    <!-- Image -->
                                     <Image Grid.Column="0"
-                                           Source="{Binding ImageUrl}"
+                                           Source="{Binding DisplayImage}"
                                            Aspect="AspectFill"
-                                           HeightRequest="100"
-                                           WidthRequest="120"/>
+                                           HeightRequest="180"
+                                           WidthRequest="150"/>
 
-                                    <!-- Recipe Info -->
-                                    <VerticalStackLayout Grid.Column="1" Padding="12" Spacing="4" VerticalOptions="Center">
+                                    <!-- Info + Buttons -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Padding="12,10"
+                                                         Spacing="6"
+                                                         VerticalOptions="FillAndExpand">
+
+                                        <!-- Name -->
                                         <Label Text="{Binding Name}"
-                                               FontSize="16"
-                                               FontAttributes="Bold"
+                                               FontSize="16" FontAttributes="Bold"
                                                TextColor="#333"
                                                LineBreakMode="TailTruncation"/>
 
+                                        <!-- Cuisine + Custom Badge -->
                                         <HorizontalStackLayout Spacing="6">
                                             <Label Text="{Binding CuisineType}"
-                                                   FontSize="13"
-                                                   TextColor="#A62B60"/>    
+                                                   FontSize="13" TextColor="#A62B60"/>
                                             <Frame IsVisible="{Binding IsCustom}"
                                                    BackgroundColor="#97BC62"
-                                                   CornerRadius="4"
-                                                   Padding="6,2"
+                                                   CornerRadius="4" Padding="6,2"
                                                    HasShadow="False">
-                                                <Label Text="⭐ Custom"
-                                                       FontSize="11"
-                                                       TextColor="White"/>
+                                                <Label Text="Custom"
+                                                       FontSize="11" TextColor="White"/>
                                             </Frame>
                                         </HorizontalStackLayout>
 
-                                        <HorizontalStackLayout Spacing="10">
-                                            <Label Text="{Binding Difficulty}"
-                                                   FontSize="12"
-                                                   TextColor="Gray"/>
-                                            <Label Text="•" TextColor="Gray" FontSize="12"/>
+                                        <!-- Time + Servings + Difficulty -->
+                                        <HorizontalStackLayout Spacing="6">
                                             <Label Text="{Binding TotalTimeMinutes, StringFormat='{0} min'}"
-                                                   FontSize="12"
-                                                   TextColor="Gray"/>
+                                                   FontSize="12" TextColor="Gray"/>
+                                            <Label Text="|" TextColor="#DDD" FontSize="12"/>
+                                            <Label Text="{Binding Servings, StringFormat='{0} srv'}"
+                                                   FontSize="12" TextColor="Gray"/>
+                                            <Label Text="|" TextColor="#DDD" FontSize="12"/>
+                                            <Label Text="{Binding Difficulty}"
+                                                   FontSize="12" TextColor="Gray"/>
                                         </HorizontalStackLayout>
-                                    </VerticalStackLayout>
 
+                                        <!-- Ingredients preview -->
+                                        <Label Text="{Binding IngredientsDisplay}"
+                                               FontSize="12" TextColor="#888"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2"/>
+
+                                        <!-- Spacer -->
+                                        <BoxView HeightRequest="1"
+                                                 BackgroundColor="#EEE"
+                                                 Margin="0,4"/>
+
+                                        <!-- Buttons -->
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                            <Button Grid.Column="0"
+                                                    Text="{Binding IsFavourite, Converter={StaticResource BoolToSaveTextConverter}}"
+                                                    BackgroundColor="{Binding IsFavourite, Converter={StaticResource BoolToSaveColorConverter}}"
+                                                    TextColor="White"
+                                                    FontSize="12"
+                                                    CornerRadius="8"
+                                                    Padding="8,6"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipesViewModel}}, Path=ToggleFavouriteCommand}"
+                                                    CommandParameter="{Binding .}"/>
+
+                                            <Button Grid.Column="1"
+                                                    Text="View Details"
+                                                    BackgroundColor="#A62B60"
+                                                    TextColor="White"
+                                                    FontSize="12"
+                                                    CornerRadius="8"
+                                                    Padding="8,6"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipesViewModel}}, Path=GoToRecipeDetailCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        </Grid>
+
+                                    </VerticalStackLayout>
                                 </Grid>
 
-                                <!-- Tap gesture -->
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:RecipesViewModel}}, Path=GoToRecipeDetailCommand}"
-                                        CommandParameter="{Binding .}"/>
-                                </Frame.GestureRecognizers>
                             </Frame>
                         </Grid>
                     </DataTemplate>

@@ -5,68 +5,48 @@
              x:Class="RecipeApp.MAUI.Views.HomePage"
              x:DataType="viewmodel:HomeViewModel"
              Title="{Binding Title}">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- Header -->
-            <Frame BackgroundColor="#A62B60" CornerRadius="10" Padding="30" HasShadow="True">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="🍳 Recipe Management App"
-                           FontSize="28"
-                           FontAttributes="Bold"
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Header — smaller, no emoji -->
+            <Frame BackgroundColor="#A62B60" CornerRadius="10"
+                   Padding="20" HasShadow="True">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Recipe Management App"
+                           FontSize="22" FontAttributes="Bold"
                            TextColor="White"
                            HorizontalTextAlignment="Center"/>
-
                     <Label Text="{Binding WelcomeMessage}"
-                           FontSize="14"
-                           TextColor="White"
+                           FontSize="13" TextColor="White"
                            HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Stats Cards -->
+            <!-- Stats Cards — smaller -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
-
-                <!-- Total Recipes Card -->
-                <Frame Grid.Column="0" 
-                       BackgroundColor="White" 
-                       CornerRadius="10" 
-                       Padding="20"
-                       HasShadow="True">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="📚"
-                               FontSize="32"
-                               HorizontalTextAlignment="Center"/>
+                <Frame Grid.Column="0" BackgroundColor="White"
+                       CornerRadius="10" Padding="15" HasShadow="True">
+                    <VerticalStackLayout Spacing="4">
                         <Label Text="{Binding TotalRecipes}"
-                               FontSize="32"
-                               FontAttributes="Bold"
+                               FontSize="26" FontAttributes="Bold"
                                TextColor="#A62B60"
                                HorizontalTextAlignment="Center"/>
                         <Label Text="Total Recipes"
-                               FontSize="12"
-                               TextColor="Gray"
+                               FontSize="12" TextColor="Gray"
                                HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- Favourites Card -->
-                <Frame Grid.Column="1" 
-                       BackgroundColor="White" 
-                       CornerRadius="10" 
-                       Padding="20"
-                       HasShadow="True">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="❤️"
-                               FontSize="32"
-                               HorizontalTextAlignment="Center"/>
+                <Frame Grid.Column="1" BackgroundColor="White"
+                       CornerRadius="10" Padding="15" HasShadow="True">
+                    <VerticalStackLayout Spacing="4">
                         <Label Text="{Binding FavouriteCount}"
-                               FontSize="32"
-                               FontAttributes="Bold"
+                               FontSize="26" FontAttributes="Bold"
                                TextColor="#97BC62"
                                HorizontalTextAlignment="Center"/>
                         <Label Text="My Favourites"
-                               FontSize="12"
-                               TextColor="Gray"
+                               FontSize="12" TextColor="Gray"
                                HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>
                 </Frame>
@@ -74,61 +54,54 @@
 
             <!-- Quick Actions -->
             <Label Text="Quick Actions"
-                   FontSize="20"
-                   FontAttributes="Bold"
-                   TextColor="#A62B60"
-                   Margin="0,20,0,0"/>
+                   FontSize="18" FontAttributes="Bold"
+                   TextColor="#A62B60"/>
 
-            <Button Text="📖 Browse Recipes"
-                    BackgroundColor="#A62B60"
-                    TextColor="White"
-                    FontSize="16"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    Padding="15"
+            <!-- First button - full width -->
+            <Button Text="Browse Recipes"
+                    BackgroundColor="#BA366F"
+                    TextColor="White" FontSize="16" FontAttributes="Bold"
+                    CornerRadius="10" Padding="18"
                     Clicked="OnBrowseRecipesClicked"/>
 
-            <Button Text="❤️ My Favourites"
-                    BackgroundColor="#97BC62"
-                    TextColor="White"
-                    FontSize="16"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    Padding="15"
-                    Clicked="OnFavouritesClicked"/>
+            <!-- 2x2 grid -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                  ColumnSpacing="15" RowSpacing="15">
 
-            <Button Text="➕ Add Custom Recipe"
-                    BackgroundColor="#A62B60"
-                    TextColor="White"
-                    FontSize="16"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    Padding="15"
-                    Clicked="OnAddRecipeClicked"/>
+                <Button Grid.Row="0" Grid.Column="0"
+                        Text="My Favourites"
+                        BackgroundColor="#A62B60"
+                        TextColor="White" FontSize="14" FontAttributes="Bold"
+                        CornerRadius="10" Padding="14"
+                        Clicked="OnFavouritesClicked"/>
 
-            <Button Text="📅 Meal Planner"
-                    BackgroundColor="#97BC62"
-                    TextColor="White"
-                    FontSize="16"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    Padding="15"
-                    Clicked="OnMealPlannerClicked"/>
+                <Button Grid.Row="0" Grid.Column="1"
+                        Text="Add Recipe"
+                        BackgroundColor="#A62B60"
+                        TextColor="White" FontSize="14" FontAttributes="Bold"
+                        CornerRadius="10" Padding="14"
+                        Clicked="OnAddRecipeClicked"/>
 
-            <Button Text="🛒 Shopping List"
-                    BackgroundColor="#A62B60"
-                    TextColor="White"
-                    FontSize="16"
-                    FontAttributes="Bold"
-                    CornerRadius="10"
-                    Padding="15"
-                    Clicked="OnShoppingListClicked"/>
+                <Button Grid.Row="1" Grid.Column="0"
+                        Text="Meal Planner"
+                        BackgroundColor="#A62B60"
+                        TextColor="White" FontSize="14" FontAttributes="Bold"
+                        CornerRadius="10" Padding="14"
+                        Clicked="OnMealPlannerClicked"/>
 
-            <!-- Loading Indicator -->
+                <Button Grid.Row="1" Grid.Column="1"
+                        Text="Shopping List"
+                        BackgroundColor="#A62B60"
+                        TextColor="White" FontSize="14" FontAttributes="Bold"
+                        CornerRadius="10" Padding="14"
+                        Clicked="OnShoppingListClicked"/>
+            </Grid>
+
+            <!-- Loading -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
-                              IsVisible="{Binding IsBusy}"
-                              Color="#A62B60"
-                              HeightRequest="50"/>
+                               IsVisible="{Binding IsBusy}"
+                               Color="#A62B60"
+                               HeightRequest="40"/>
 
         </VerticalStackLayout>
     </ScrollView>
