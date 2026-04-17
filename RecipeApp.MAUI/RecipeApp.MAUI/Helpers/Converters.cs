@@ -107,4 +107,39 @@ namespace RecipeApp.MAUI.Helpers
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Returns a colour for each meal type pill
+    /// </summary>
+    public class MealTypeToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value as string switch
+            {
+                "Breakfast" => Color.FromArgb("#F4A261"),
+                "Lunch" => Color.FromArgb("#2A9D8F"),
+                "Dinner" => Color.FromArgb("#A62B60"),
+                "Snack" => Color.FromArgb("#97BC62"),
+                _ => Color.FromArgb("#888888")
+            };
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Returns a light background for today's card header
+    /// </summary>
+    public class BoolToDayHeaderColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => value is bool b && b
+                ? Color.FromArgb("#FFF0F5")
+                : Colors.White;
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
 }

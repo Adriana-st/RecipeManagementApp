@@ -15,16 +15,44 @@ namespace RecipeApp.MAUI.ViewModels
         public ObservableCollection<ShoppingItem> ShoppingItems { get; } = new();
 
         [ObservableProperty]
-        private bool _hasNoItems;
+        private bool _hasNoItems = true;
 
         [ObservableProperty]
         private string _weekRangeText = string.Empty;
+
+        [ObservableProperty]
+        private DateTime _currentWeekStart;
 
         public ShoppingListViewModel(DatabaseService databaseService, RecipeApiService recipeApiService)
         {
             _databaseService = databaseService;
             _recipeApiService = recipeApiService;
             Title = "Shopping List";
+
+            // Start on current week
+            var today = DateTime.Today;
+            var daysFromMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
+            CurrentWeekStart = today.AddDays(-daysFromMonday);
+        }
+
+        partial void OnCurrentWeekStartChanged(DateTime value)
+        {
+            var weekEnd = value.AddDays(6);
+            WeekRangeText = $"{value:dd MMM} - {weekEnd:dd MMM yyyy}";
+            ShoppingItems.Clear();
+            HasNoItems = true;
+        }
+
+        [RelayCommand]
+        public void PreviousWeek()
+        {
+            CurrentWeekStart = CurrentWeekStart.AddDays(-7);
+        }
+
+        [RelayCommand]
+        public void NextWeek()
+        {
+            CurrentWeekStart = CurrentWeekStart.AddDays(7);
         }
 
         [RelayCommand]
@@ -36,27 +64,20 @@ namespace RecipeApp.MAUI.ViewModels
             {
                 IsBusy = true;
 
-                var today = DateTime.Today;
-                var daysFromMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
-                var weekStart = today.AddDays(-daysFromMonday);
-                var weekEnd = weekStart.AddDays(7);
-
-                WeekRangeText = $"{weekStart:dd MMM} - {weekEnd.AddDays(-1):dd MMM yyyy}";
-
-                var mealPlans = await _databaseService.GetWeekMealPlansAsync(weekStart);
+                var mealPlans = await _databaseService.GetWeekMealPlansAsync(CurrentWeekStart);
 
                 if (!mealPlans.Any())
                 {
                     ShoppingItems.Clear();
                     HasNoItems = true;
+                    await Shell.Current.DisplayAlert("No Meals",
+                        "No meals planned for this week. Add meals in the Meal Planner first.", "OK");
                     return;
                 }
 
-                // Get favourites and all API recipes
                 var favourites = await _databaseService.GetFavouritesAsync();
                 var apiRecipes = await _recipeApiService.GetRecipesAsync();
 
-                // Merge both sources into one lookup
                 var allKnownRecipes = favourites
                     .Concat(apiRecipes)
                     .GroupBy(r => r.Name.ToLowerInvariant().Trim())

@@ -19,6 +19,8 @@
             <helpers:BoolToSaveTextConverter x:Key="BoolToSaveTextConverter"/>
             <helpers:BoolToSaveColorConverter x:Key="BoolToSaveColorConverter"/>
             <helpers:BoolToFilterButtonColorConverter x:Key="BoolToFilterButtonColorConverter"/>
+            <helpers:MealTypeToColorConverter x:Key="MealTypeToColorConverter"/>
+            <helpers:BoolToDayHeaderColorConverter x:Key="BoolToDayHeaderColorConverter"/>
 
         </ResourceDictionary>
     </Application.Resources>

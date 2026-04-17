@@ -276,5 +276,11 @@ namespace RecipeApp.MAUI.ViewModels
         public string ShortDate { get; set; }
         public bool IsToday { get; set; }
         public ObservableCollection<MealPlan> Meals { get; } = new();
+
+        public bool HasNoMeals => !Meals.Any();
+        public DayMeals()
+        {
+            Meals.CollectionChanged += (s, e) => OnPropertyChanged(nameof(HasNoMeals));
+        }
     }
 }
