@@ -53,12 +53,15 @@ namespace RecipeApp.MAUI.ViewModels
         {
             if (recipe is null) return;
 
-            bool confirm = await Shell.Current.DisplayAlert(
-                "Remove Favourite",
-                $"Remove {recipe.Name} from favourites?",
-                "Remove", "Cancel");
+            string message = recipe.Source == "Custom"
+                ? $"This will permanently delete \"{recipe.Name}\" from the app. Are you sure?"
+                : $"Remove \"{recipe.Name}\" from favourites?";
 
-            if (!confirm) return;
+            string title = recipe.Source == "Custom" ? "Delete Recipe" : "Remove Favourite";
+            string confirm = recipe.Source == "Custom" ? "Delete" : "Remove";
+
+            bool confirmed = await Shell.Current.DisplayAlert(title, message, confirm, "Cancel");
+            if (!confirmed) return;
 
             await _databaseService.DeleteRecipeAsync(recipe);
             Favourites.Remove(recipe);

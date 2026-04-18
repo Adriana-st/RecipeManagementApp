@@ -8,10 +8,6 @@ using RecipeApp.MAUI.Models;
 
 namespace RecipeApp.MAUI.Services
 {
-    /// <summary>
-    /// SQLite database service for MAUI
-    /// Uses async/await for better performance
-    /// </summary>
     public class DatabaseService
     {
         private SQLiteAsyncConnection _database;
@@ -20,7 +16,6 @@ namespace RecipeApp.MAUI.Services
 
         public DatabaseService()
         {
-            // Don't initialize in constructor - causes deadlock!
             System.Diagnostics.Debug.WriteLine("🔵 DatabaseService constructor");
         }
 
@@ -37,14 +32,11 @@ namespace RecipeApp.MAUI.Services
 
                 System.Diagnostics.Debug.WriteLine("🔵 Initializing database...");
 
-                // Get database path
                 var dbPath = Path.Combine(FileSystem.AppDataDirectory, "RecipeApp.db3");
                 System.Diagnostics.Debug.WriteLine($"🔵 Database path: {dbPath}");
 
-                // Create connection
                 _database = new SQLiteAsyncConnection(dbPath);
 
-                // Create tables
                 await _database.CreateTableAsync<Recipe>();
                 await _database.CreateTableAsync<MealPlan>();
 
@@ -61,7 +53,6 @@ namespace RecipeApp.MAUI.Services
 
         /// <summary>
         /// Get all favourite recipes
-        /// Demonstrates: LINQ with async
         /// </summary>
         public async Task<List<Recipe>> GetFavouritesAsync()
         {
@@ -72,17 +63,15 @@ namespace RecipeApp.MAUI.Services
                 .OrderByDescending(r => r.DateAdded)
                 .ToListAsync();
 
-            // Load ingredients/instructions from JSON
             foreach (var recipe in recipes)
-            {
                 recipe.LoadFromDatabase();
-            }
 
             return recipes;
         }
 
         /// <summary>
-        /// Save recipe to favourites
+        /// Save recipe to database
+        /// Custom recipes are always saved as favourites
         /// </summary>
         public async Task<int> SaveRecipeAsync(Recipe recipe)
         {
@@ -91,44 +80,49 @@ namespace RecipeApp.MAUI.Services
             recipe.PrepareForDatabase();
             recipe.IsFavourite = true;
 
-            // Check if already exists (by ApiId for API recipes)
-            Recipe existing = null;
-
-            if (recipe.ApiId.HasValue && recipe.Source == "API")
+            if (recipe.Source == "Custom")
             {
-                existing = await _database.Table<Recipe>()
+                // Custom recipe — insert only if not already in DB
+                if (recipe.DatabaseId > 0)
+                {
+                    await _database.UpdateAsync(recipe);
+                    return recipe.DatabaseId;
+                }
+
+                await _database.InsertAsync(recipe);
+                return recipe.DatabaseId;
+            }
+            else
+            {
+                // API recipe — check by ApiId to avoid duplicates
+                var existing = await _database.Table<Recipe>()
                     .Where(r => r.ApiId == recipe.ApiId && r.Source == "API")
                     .FirstOrDefaultAsync();
-            }
-            else if (recipe.DatabaseId > 0)
-            {
-                existing = await _database.Table<Recipe>()
-                    .Where(r => r.DatabaseId == recipe.DatabaseId)
-                    .FirstOrDefaultAsync();
-            }
 
-            if (existing != null)
-            {
-                // Already exists, don't save duplicate
-                return existing.DatabaseId;
-            }
+                if (existing != null)
+                {
+                    existing.IsFavourite = true;
+                    await _database.UpdateAsync(existing);
+                    return existing.DatabaseId;
+                }
 
-            // Insert new recipe
-            await _database.InsertAsync(recipe);
-            return recipe.DatabaseId;
+                await _database.InsertAsync(recipe);
+                return recipe.DatabaseId;
+            }
         }
 
         /// <summary>
-        /// Delete recipe from favourites
+        /// Remove from favourites
         /// </summary>
         public async Task<int> DeleteRecipeAsync(Recipe recipe)
         {
             await EnsureInitializedAsync();
+            // Both custom and API recipes are fully deleted
             return await _database.DeleteAsync(recipe);
         }
 
         /// <summary>
-        /// Check if recipe is saved
+        /// Check if recipe is saved as favourite
         /// </summary>
         public async Task<bool> IsRecipeSavedAsync(int? apiId)
         {
@@ -145,7 +139,7 @@ namespace RecipeApp.MAUI.Services
         }
 
         /// <summary>
-        /// Get all custom recipes added by the user
+        /// Get all custom recipes — regardless of favourite status
         /// </summary>
         public async Task<List<Recipe>> GetCustomRecipesAsync()
         {
@@ -207,12 +201,9 @@ namespace RecipeApp.MAUI.Services
             await EnsureInitializedAsync();
 
             var meals = await GetWeekMealPlansAsync(weekStart);
-
             int count = 0;
             foreach (var meal in meals)
-            {
                 count += await DeleteMealPlanAsync(meal);
-            }
 
             return count;
         }

@@ -37,7 +37,11 @@ namespace RecipeApp.MAUI.ViewModels
 
         private async Task CheckIfFavouriteAsync()
         {
-            IsFavourite = await _databaseService.IsRecipeSavedAsync(Recipe?.ApiId);
+            if (Recipe?.Source == "Custom")
+                IsFavourite = true; // Custom recipes are always favourited
+            else
+                IsFavourite = await _databaseService.IsRecipeSavedAsync(Recipe?.ApiId);
+
             UpdateFavouriteButton();
         }
 
@@ -66,20 +70,33 @@ namespace RecipeApp.MAUI.ViewModels
 
                 if (IsFavourite)
                 {
-                    // Find and delete from DB
-                    var favourites = await _databaseService.GetFavouritesAsync();
-                    var existing = favourites.FirstOrDefault(r => r.ApiId == Recipe.ApiId);
-                    if (existing != null)
-                        await _databaseService.DeleteRecipeAsync(existing);
+                    if (Recipe.Source == "Custom")
+                    {
+                        bool confirmed = await Shell.Current.DisplayAlert(
+                            "Delete Recipe",
+                            $"This will permanently delete \"{Recipe.Name}\" from the app. Are you sure?",
+                            "Delete", "Cancel");
 
+                        if (!confirmed) return;
+
+                        await _databaseService.DeleteRecipeAsync(Recipe);
+                        await Shell.Current.DisplayAlert("Deleted",
+                            $"{Recipe.Name} has been deleted.", "OK");
+                        await Shell.Current.GoToAsync("..");
+                        return;
+                    }
+
+                    await _databaseService.DeleteRecipeAsync(Recipe);
                     IsFavourite = false;
-                    await Shell.Current.DisplayAlert("Removed", $"{Recipe.Name} removed from favourites.", "OK");
+                    await Shell.Current.DisplayAlert("Removed",
+                        $"{Recipe.Name} removed from favourites.", "OK");
                 }
                 else
                 {
                     await _databaseService.SaveRecipeAsync(Recipe);
                     IsFavourite = true;
-                    await Shell.Current.DisplayAlert("Saved!", $"{Recipe.Name} added to favourites.", "OK");
+                    await Shell.Current.DisplayAlert("Saved!",
+                        $"{Recipe.Name} added to favourites.", "OK");
                 }
 
                 UpdateFavouriteButton();

@@ -48,7 +48,7 @@ namespace RecipeApp.MAUI.ViewModels
 
         public List<string> ProteinOptions { get; } = new()
         {
-            "All", "Chicken", "Beef", "Pork", "Fish", "Seafood",
+            "All", "Chicken", "Beef", "Fish", "Seafood",
             "Lamb", "Turkey", "Tofu", "Eggs", "Vegetarian"
         };
 
@@ -81,7 +81,10 @@ namespace RecipeApp.MAUI.ViewModels
                 // Set favourite status for each recipe
                 foreach (var recipe in _allRecipes)
                 {
-                    recipe.IsFavourite = await _databaseService.IsRecipeSavedAsync(recipe.ApiId);
+                    if (recipe.Source == "Custom")
+                        recipe.IsFavourite = true; // Custom recipes are always favourited
+                    else
+                        recipe.IsFavourite = await _databaseService.IsRecipeSavedAsync(recipe.ApiId);
                 }
 
                 ApplyFilters();
@@ -173,6 +176,21 @@ namespace RecipeApp.MAUI.ViewModels
             {
                 if (recipe.IsFavourite)
                 {
+                    if (recipe.Source == "Custom")
+                    {
+                        bool confirmed = await Shell.Current.DisplayAlert(
+                            "Delete Recipe",
+                            $"This will permanently delete \"{recipe.Name}\" from the app. Are you sure?",
+                            "Delete", "Cancel");
+
+                        if (!confirmed) return;
+
+                        await _databaseService.DeleteRecipeAsync(recipe);
+                        _allRecipes.Remove(recipe);
+                        ApplyFilters();
+                        return;
+                    }
+
                     var favourites = await _databaseService.GetFavouritesAsync();
                     var existing = favourites.FirstOrDefault(r => r.ApiId == recipe.ApiId);
                     if (existing != null)
