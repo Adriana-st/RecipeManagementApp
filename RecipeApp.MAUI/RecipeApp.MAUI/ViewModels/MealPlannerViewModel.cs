@@ -1,15 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RecipeApp.MAUI.Models;
 using RecipeApp.MAUI.Services;
 using System.Collections.ObjectModel;
+using RecipeApp.Shared;
 
 namespace RecipeApp.MAUI.ViewModels
 {
     public partial class MealPlannerViewModel : BaseViewModel
     {
         private readonly DatabaseService _databaseService;
-        private readonly RecipeApiService _recipeApiService;
+        private readonly IRecipeApiService _recipeApiService;
 
         [ObservableProperty]
         private DateTime _currentWeekStart;
@@ -19,15 +19,14 @@ namespace RecipeApp.MAUI.ViewModels
 
         public ObservableCollection<DayMeals> WeekMeals { get; } = new();
 
-        public MealPlannerViewModel(DatabaseService databaseService, RecipeApiService recipeApiService)
+        public MealPlannerViewModel(DatabaseService databaseService, IRecipeApiService recipeApiService)
         {
             _databaseService = databaseService;
             _recipeApiService = recipeApiService;
             Title = "Meal Planner";
 
             var today = DateTime.Today;
-            var daysFromMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
-            CurrentWeekStart = today.AddDays(-daysFromMonday);
+            CurrentWeekStart = RecipeHelper.GetWeekStart(today);
         }
 
         partial void OnCurrentWeekStartChanged(DateTime value)
@@ -62,7 +61,7 @@ namespace RecipeApp.MAUI.ViewModels
 
                     var mealsForDay = mealPlans
                         .Where(m => m.Date.Date == date.Date)
-                        .OrderBy(m => GetMealTypeOrder(m.MealType))
+                        .OrderBy(m => RecipeHelper.GetMealTypeOrder(m.MealType))
                         .ToList();
 
                     foreach (var meal in mealsForDay)
@@ -227,7 +226,7 @@ namespace RecipeApp.MAUI.ViewModels
 
             // Re-sort
             var sorted = dayMeals.Meals
-                .OrderBy(m => GetMealTypeOrder(m.MealType))
+                .OrderBy(m => RecipeHelper.GetMealTypeOrder(m.MealType))
                 .ToList();
 
             dayMeals.Meals.Clear();
@@ -257,15 +256,6 @@ namespace RecipeApp.MAUI.ViewModels
                 }
             }
         }
-
-        private static int GetMealTypeOrder(string mealType) => mealType switch
-        {
-            "Breakfast" => 0,
-            "Lunch" => 1,
-            "Dinner" => 2,
-            "Snack" => 3,
-            _ => 4
-        };
     }
 
     // Helper class to group meals by day

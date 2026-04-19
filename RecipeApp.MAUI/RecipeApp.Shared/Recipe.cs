@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 
 
-namespace RecipeApp.MAUI.Models
+namespace RecipeApp.Shared
 {
     /// <summary>
     /// Recipe model with improved ID structure

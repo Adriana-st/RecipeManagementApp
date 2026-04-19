@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RecipeApp.MAUI.Models;
+using RecipeApp.Shared;
 using RecipeApp.MAUI.Services;
 
 namespace RecipeApp.MAUI.ViewModels

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 
-namespace RecipeApp.MAUI.Models
+namespace RecipeApp.Shared
 {
     public class MealPlan
     {

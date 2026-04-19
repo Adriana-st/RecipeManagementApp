@@ -5,14 +5,14 @@ using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using RecipeApp.MAUI.Models;
+using RecipeApp.Shared;
 
 namespace RecipeApp.MAUI.Services
 {
     /// <summary>
     /// Service for fetching recipes from DummyJSON API
     /// </summary>
-    public class RecipeApiService
+    public class RecipeApiService : IRecipeApiService
     {
         private readonly HttpClient _httpClient;
         private const string BaseUrl = "https://dummyjson.com/recipes";

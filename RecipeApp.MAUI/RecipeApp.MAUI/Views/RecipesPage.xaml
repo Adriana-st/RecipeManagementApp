@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:RecipeApp.MAUI.ViewModels"
-             xmlns:models="clr-namespace:RecipeApp.MAUI.Models"
+             xmlns:models="clr-namespace:RecipeApp.Shared;assembly=RecipeApp.Shared"
              x:Class="RecipeApp.MAUI.Views.RecipesPage"
              x:DataType="viewmodel:RecipesViewModel"
              Title="{Binding Title}">
@@ -60,25 +60,21 @@
                     <Slider Minimum="10" Maximum="300"
                             Value="{Binding MaxTime}"
                             DragCompleted="OnSliderDragCompleted"
-                            ThumbColor="#A62B60"
-                            MinimumTrackColor="#A62B60"/>
+                            ThumbColor="{StaticResource AppPrimary}"
+                            MinimumTrackColor="{StaticResource AppPrimary}"/>
                 </VerticalStackLayout>
             </Grid>
 
             <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                 <Button Grid.Column="0"
                         Text="Apply Filters"
-                        BackgroundColor="#A62B60"
-                        TextColor="White"
-                        FontSize="13"
-                        CornerRadius="8"
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        FontSize="13" 
                         Clicked="OnApplyFiltersClicked"/>
                 <Button Grid.Column="1"
                         Text="Reset"
-                        BackgroundColor="#888"
-                        TextColor="White"
-                        FontSize="13"
-                        CornerRadius="8"
+                        Style="{StaticResource SecondaryButtonStyle}" 
+                        FontSize="13" 
                         Clicked="OnResetFiltersClicked"/>
             </Grid>
 
@@ -125,15 +121,15 @@
                                         <!-- Name -->
                                         <Label Text="{Binding Name}"
                                                FontSize="16" FontAttributes="Bold"
-                                               TextColor="#333"
+                                               TextColor="{StaticResource AppTextPrimary}"
                                                LineBreakMode="TailTruncation"/>
 
                                         <!-- Cuisine + Custom Badge -->
                                         <HorizontalStackLayout Spacing="6">
                                             <Label Text="{Binding CuisineType}"
-                                                   FontSize="13" TextColor="#A62B60"/>
+                                                   FontSize="13" TextColor="{StaticResource AppPrimary}"/>
                                             <Frame IsVisible="{Binding IsCustom}"
-                                                   BackgroundColor="#97BC62"
+                                                   BackgroundColor="{StaticResource AppAccent}"
                                                    CornerRadius="4" Padding="6,2"
                                                    HasShadow="False">
                                                 <Label Text="Custom"
@@ -178,7 +174,7 @@
 
                                             <Button Grid.Column="1"
                                                     Text="View Details"
-                                                    BackgroundColor="#A62B60"
+                                                    Style="{StaticResource PrimaryButtonStyle}"
                                                     TextColor="White"
                                                     FontSize="12"
                                                     CornerRadius="8"

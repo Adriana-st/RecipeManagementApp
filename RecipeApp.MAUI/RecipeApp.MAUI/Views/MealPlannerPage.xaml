@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:RecipeApp.MAUI.ViewModels"
-             xmlns:models="clr-namespace:RecipeApp.MAUI.Models"
+             xmlns:models="clr-namespace:RecipeApp.Shared;assembly=RecipeApp.Shared"
              x:Class="RecipeApp.MAUI.Views.MealPlannerPage"
              x:DataType="viewmodel:MealPlannerViewModel"
              Title="{Binding Title}">
@@ -10,8 +10,7 @@
     <Grid RowDefinitions="Auto,*">
 
         <!-- Week Navigation Header -->
-        <Frame Grid.Row="0" BackgroundColor="#A62B60"
-               CornerRadius="0" Padding="10" HasShadow="False">
+        <Frame Grid.Row="0" Style="{StaticResource PageHeaderStyle}" Padding="10">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <Button Grid.Column="0"
                         Text="◀"
@@ -65,11 +64,11 @@
                                                TextColor="{Binding IsToday, Converter={StaticResource BoolToColorConverter}}"
                                                VerticalOptions="Center"/>
                                         <Label Text="{Binding ShortDate}"
-                                               FontSize="13" TextColor="Gray"
+                                               FontSize="13" TextColor="{StaticResource AppTextSecondary}"
                                                VerticalOptions="Center"/>
                                         <!-- Today badge -->
                                         <Frame IsVisible="{Binding IsToday}"
-                                               BackgroundColor="#A62B60"
+                                               BackgroundColor="{StaticResource AppPrimary}"
                                                CornerRadius="6" Padding="8,2"
                                                HasShadow="False">
                                             <Label Text="Today"
@@ -80,10 +79,8 @@
 
                                     <Button Grid.Column="1"
                                             Text="+ Add Meal"
-                                            BackgroundColor="#A62B60"
-                                            TextColor="White"
+                                            Style="{StaticResource PrimaryButtonStyle}"
                                             FontSize="12"
-                                            CornerRadius="8"
                                             Padding="12,6"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MealPlannerViewModel}}, Path=AddMealCommand}"
                                             CommandParameter="{Binding .}"/>
@@ -126,7 +123,7 @@
                                                 <Label Grid.Column="1"
                                                        Text="{Binding RecipeName}"
                                                        FontSize="14"
-                                                       TextColor="#333"
+                                                       TextColor="{StaticResource AppTextPrimary}"
                                                        VerticalOptions="Center"
                                                        LineBreakMode="TailTruncation"/>
 

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RecipeApp.MAUI.Models;
+using RecipeApp.Shared;
 using RecipeApp.MAUI.Services;
 using RecipeApp.MAUI.Views;
 using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ namespace RecipeApp.MAUI.ViewModels
 {
     public partial class RecipesViewModel : BaseViewModel
     {
-        private readonly RecipeApiService _recipeApiService;
+        private readonly IRecipeApiService _recipeApiService;
         private readonly DatabaseService _databaseService;
 
         private List<Recipe> _allRecipes = new();
@@ -52,7 +52,7 @@ namespace RecipeApp.MAUI.ViewModels
             "Lamb", "Turkey", "Tofu", "Eggs", "Vegetarian"
         };
 
-        public RecipesViewModel(RecipeApiService recipeApiService, DatabaseService databaseService)
+        public RecipesViewModel(IRecipeApiService recipeApiService, DatabaseService databaseService)
         {
             _recipeApiService = recipeApiService;
             _databaseService = databaseService;

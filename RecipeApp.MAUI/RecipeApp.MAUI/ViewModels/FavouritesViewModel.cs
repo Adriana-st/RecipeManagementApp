@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RecipeApp.MAUI.Models;
 using RecipeApp.MAUI.Services;
 using RecipeApp.MAUI.Views;
 using System.Collections.ObjectModel;
+using RecipeApp.Shared;
 
 namespace RecipeApp.MAUI.ViewModels
 {

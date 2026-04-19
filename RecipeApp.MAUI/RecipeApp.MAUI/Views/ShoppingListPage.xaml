@@ -9,8 +9,9 @@
     <Grid RowDefinitions="Auto,Auto,*">
 
         <!-- Week Navigation Header -->
-        <Frame Grid.Row="0" BackgroundColor="#A62B60"
-               CornerRadius="0" Padding="10" HasShadow="False">
+        <Frame Grid.Row="0" 
+               Style="{StaticResource PageHeaderStyle}" 
+               Padding="10">
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <Button Grid.Column="0"
                         Text="◀"
@@ -44,21 +45,18 @@
               ColumnSpacing="10" Padding="15,10">
             <Button Grid.Column="0"
                     Text="Generate"
-                    BackgroundColor="#A62B60"
-                    TextColor="White" FontSize="13"
-                    CornerRadius="8"
+                    Style="{StaticResource PrimaryButtonStyle}" 
+                    FontSize="13"
                     Command="{Binding GenerateShoppingListCommand}"/>
             <Button Grid.Column="1"
                     Text="Copy"
-                    BackgroundColor="#97BC62"
-                    TextColor="White" FontSize="13"
-                    CornerRadius="8"
+                    Style="{StaticResource AccentButtonStyle}" 
+                    FontSize="13"
                     Command="{Binding CopyToClipboardCommand}"/>
             <Button Grid.Column="2"
                     Text="Clear Done"
-                    BackgroundColor="#888"
-                    TextColor="White" FontSize="13"
-                    CornerRadius="8"
+                    Style="{StaticResource SecondaryButtonStyle}" 
+                    FontSize="13"
                     Command="{Binding ClearCheckedCommand}"/>
         </Grid>
 
@@ -70,10 +68,10 @@
                              Spacing="15" Padding="40">
             <Label Text="No items yet!"
                    FontSize="22" FontAttributes="Bold"
-                   TextColor="#333"
+                   TextColor="{StaticResource AppTextPrimary}"
                    HorizontalTextAlignment="Center"/>
             <Label Text="Navigate to a week and tap Generate to build your shopping list."
-                   FontSize="15" TextColor="Gray"
+                   FontSize="15" TextColor="{StaticResource AppTextSecondary}"
                    HorizontalTextAlignment="Center"/>
         </VerticalStackLayout>
 
@@ -90,7 +88,7 @@
                             <Grid ColumnDefinitions="Auto,*">
                                 <CheckBox Grid.Column="0"
                                           IsChecked="{Binding IsChecked}"
-                                          Color="#A62B60"/>
+                                          Color="{StaticResource AppPrimary}"/>
                                 <Label Grid.Column="1"
                                        Text="{Binding Name}"
                                        FontSize="15"
@@ -109,7 +107,7 @@
         <ActivityIndicator Grid.Row="2"
                            IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
-                           Color="#A62B60"
+                           Color="{StaticResource AppPrimary}"
                            VerticalOptions="Center"/>
 
     </Grid>

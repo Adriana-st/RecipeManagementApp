@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace RecipeApp.MAUI.Models
+namespace RecipeApp.Shared
 {
     /// <summary>
     /// Response wrapper from DummyJSON API

@@ -1,16 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using RecipeApp.MAUI.Models;
 using RecipeApp.MAUI.Services;
 using System.Collections.ObjectModel;
 using System.Text;
+using RecipeApp.Shared;
 
 namespace RecipeApp.MAUI.ViewModels
 {
     public partial class ShoppingListViewModel : BaseViewModel
     {
         private readonly DatabaseService _databaseService;
-        private readonly RecipeApiService _recipeApiService;
+        private readonly IRecipeApiService _recipeApiService;
 
         public ObservableCollection<ShoppingItem> ShoppingItems { get; } = new();
 
@@ -23,7 +23,7 @@ namespace RecipeApp.MAUI.ViewModels
         [ObservableProperty]
         private DateTime _currentWeekStart;
 
-        public ShoppingListViewModel(DatabaseService databaseService, RecipeApiService recipeApiService)
+        public ShoppingListViewModel(DatabaseService databaseService, IRecipeApiService recipeApiService)
         {
             _databaseService = databaseService;
             _recipeApiService = recipeApiService;
@@ -31,8 +31,7 @@ namespace RecipeApp.MAUI.ViewModels
 
             // Start on current week
             var today = DateTime.Today;
-            var daysFromMonday = ((int)today.DayOfWeek - 1 + 7) % 7;
-            CurrentWeekStart = today.AddDays(-daysFromMonday);
+            CurrentWeekStart = RecipeHelper.GetWeekStart(today);
         }
 
         partial void OnCurrentWeekStartChanged(DateTime value)

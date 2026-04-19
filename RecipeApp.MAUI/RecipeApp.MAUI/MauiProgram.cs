@@ -20,7 +20,7 @@ namespace RecipeApp.MAUI
 
             // Services
             builder.Services.AddSingleton<DatabaseService>();
-            builder.Services.AddSingleton<RecipeApiService>();
+            builder.Services.AddSingleton<IRecipeApiService, RecipeApiService>();
 
             // ViewModels
             builder.Services.AddTransient<HomeViewModel>();

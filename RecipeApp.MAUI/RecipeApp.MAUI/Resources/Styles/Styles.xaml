@@ -437,4 +437,90 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
+    <!-- ===== App Named Styles ===== -->
+
+    <!-- Page header bar (pink banner used on most pages) -->
+    <Style x:Key="PageHeaderStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource AppPrimary}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="HasShadow" Value="False"/>
+    </Style>
+
+    <!-- White bold header label inside the pink bar -->
+    <Style x:Key="PageHeaderLabelStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Section headings like "Ingredients", "Instructions" -->
+    <Style x:Key="SectionHeadingStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource AppPrimary}"/>
+    </Style>
+
+    <!-- Primary action button (pink) -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource AppPrimary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Padding" Value="14,10"/>
+    </Style>
+
+    <!-- Secondary/neutral button (grey) -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource AppNeutral}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+    </Style>
+
+    <!-- Accent button (green) -->
+    <Style x:Key="AccentButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource AppAccent}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+    </Style>
+
+    <!-- Recipe card frame -->
+    <Style x:Key="RecipeCardStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HasShadow" Value="True"/>
+    </Style>
+
+    <!-- Light pink surface card (used in detail page, add recipe) -->
+    <Style x:Key="SurfaceCardStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource AppSurface}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="HasShadow" Value="False"/>
+    </Style>
+
+    <!-- Cuisine / accent text label -->
+    <Style x:Key="CuisineTextStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{StaticResource AppPrimary}"/>
+    </Style>
+
+    <!-- Muted secondary text -->
+    <Style x:Key="MutedTextStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="Gray"/>
+    </Style>
+
+    <!-- Recipe name in list cards -->
+    <Style x:Key="RecipeNameStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource AppTextPrimary}"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+    </Style>
+
 </ResourceDictionary>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using SQLite;
-using RecipeApp.MAUI.Models;
+using RecipeApp.Shared;
 
 namespace RecipeApp.MAUI.Services
 {
