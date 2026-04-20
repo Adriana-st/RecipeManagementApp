@@ -95,7 +95,7 @@ RecipeApp.Tests/      — MSTest unit test project (18 tests)
 | Data Templates | CollectionView item templates on all list pages |
 | Exception Handling | Try/catch on all async operations, user-facing error alerts |
 | Testing | 18 unit tests across RecipeHelperTests and RecipeModelTests |
-| Something Extra | Custom IValueConverter implementations (9 converters in Converters.cs) and thread-safe async database initialisation using SemaphoreSlim |
+| Something Extra | REST API integration using HttpClient (DummyJSON API) with async/await and JSON deserialisation via Newtonsoft.Json. |
 
 ---
 
